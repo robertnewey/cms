@@ -65,7 +65,7 @@ from sqlalchemy import func
 from werkzeug.http import parse_accept_header
 from werkzeug.datastructures import LanguageAccept
 
-from cms import SOURCE_EXT_TO_LANGUAGE_MAP, ConfigError, config, ServiceCoord
+from cms import SOURCE_EXT_TO_LANGUAGE_MAP, LANGUAGE_NAMES, ConfigError, config, ServiceCoord
 from cms.io import WebService
 from cms.db import Session, Contest, User, Task, Question, Submission, Token, \
     File, UserTest, UserTestFile, UserTestManager, PrintJob
@@ -348,6 +348,8 @@ class BaseHandler(CommonRequestHandler):
 
         ret["cookie_lang"] = self.cookie_lang
         ret["browser_lang"] = self.browser_lang
+
+        ret["submission_lang_list"] = LANGUAGE_NAMES
 
         return ret
 
@@ -1041,7 +1043,7 @@ class SubmitHandler(BaseHandler):
             for filename in required.difference(provided):
                 if filename in last_submission_t.files:
                     # If we retrieve a language-dependent file from
-                    # last submission, we take not that language must
+                    # last submission, we take note that language must
                     # be the same.
                     if "%l" in filename:
                         submission_lang = last_submission_t.language
@@ -1061,10 +1063,12 @@ class SubmitHandler(BaseHandler):
                              if it is not a recognized language.
 
             """
-            for source_ext, language in SOURCE_EXT_TO_LANGUAGE_MAP.iteritems():
-                if user_filename.endswith(source_ext):
-                    return language
-            return None
+
+            languageSubmitted = self.get_argument("submission_lang", "")
+
+            # Remember this submission's language as the last language used
+            self.set_cookie("last_lang", languageSubmitted)
+            return languageSubmitted
 
         error = None
         for our_filename in files:
