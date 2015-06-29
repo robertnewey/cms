@@ -101,21 +101,41 @@ $(document).ready(function () {
 {% end %}
 
 <div id="submit_solution" class="row">
-    <div class="span5">
+    <div class="span9">
         <form class="form-horizontal" enctype="multipart/form-data" action="{{ url_root }}/tasks/{{ encode_for_url(task.name) }}/submit" method="POST">
-            <fieldset>
+            <fieldset class="row-fluid">
 {% for idx, filename in enumerate(x.filename for x in task.submission_format) %}
                 <div class="control-group">
-                    <label class="control-label" for="input{{ idx }}">{{ filename.replace(".%l", "") }}</label>
-                    <div class="controls">
+                        <label class="control-label span2" for="input{{ idx }}">{{ filename.replace(".%l", "") }}</label>
+
+                    <div class="span4">
                         <input type="file" class="input-xlarge" id="input{{ idx }}" name="{{ filename }}"/>
+                        <!-- FIXME: figure out why we had div class="controls" wrapping this -->
                     </div>
+                    <!-- Kek -->
+
+                    <!-- FIXME: Do not show this if task type is output only -->
+                    <div class="span2">
+                        <select id="submission_lang" name="submission_lang" class="span12" >
+
+                        {% for language, name in sorted(submission_lang_list.iteritems()) %}
+                            {% if language == handler.get_cookie("last_lang", "") %}
+                            <option selected="selected" font-size="4px" value="{{ language }}">{{ name }}</option>
+                            {% else %}
+                            <option value="{{ language }}">{{ name }}</option>
+                            {% end %}
+                        {% end %}
+                        </select>
+                    </div>
+                    <!-- Kek end -->
                 </div>
 {% end %}
                 <div class="control-group">
                     <div class="controls">
-                        <button type="submit" class="btn btn-success">{{ _("Submit") }}</button>
-                        <button type="reset" class="btn">{{ _("Reset") }}</button>
+                        <div class="span3">
+                            <button type="submit" class="btn btn-success">{{ _("Submit") }}</button>
+                            <button type="reset" class="btn">{{ _("Reset") }}</button>
+                        </div>
                     </div>
                 </div>
             </fieldset>
