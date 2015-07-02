@@ -118,10 +118,12 @@ $(document).ready(function () {
                         <select id="submission_lang" name="submission_lang" class="span12" >
 
                         {% for language, name in sorted(submission_lang_list.iteritems()) %}
-                            {% if language == handler.get_cookie("last_lang", "") %}
-                            <option selected="selected" font-size="4px" value="{{ language }}">{{ name }}</option>
-                            {% else %}
-                            <option value="{{ language }}">{{ name }}</option>
+                            {% if language in contest.languages %}
+                                {% if language == handler.get_cookie("last_lang", "") %}
+                                <option selected="selected" font-size="4px" value="{{ language }}">{{ name }}</option>
+                                {% else %}
+                                <option value="{{ language }}">{{ name }}</option>
+                                {% end %}
                             {% end %}
                         {% end %}
                         </select>
