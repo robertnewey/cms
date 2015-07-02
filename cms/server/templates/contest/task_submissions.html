@@ -108,8 +108,10 @@ $(document).ready(function () {
                 <div class="control-group">
                         <label class="control-label span2" for="input{{ idx }}">{{ filename.replace(".%l", "") }}</label>
 
-                        <input type="file" class="input-xlarge span4" id="input{{ idx }}" name="{{ filename }}"/>
+                    <div class="span4">
+                        <input type="file" class="input-xlarge" id="input{{ idx }}" name="{{ filename }}"/>
                         <!-- FIXME: figure out why we had div class="controls" wrapping this -->
+                    </div>
 
                     <!-- FIXME: What does this even do when there are multiple inputs? -->
                     <div class="span2">
