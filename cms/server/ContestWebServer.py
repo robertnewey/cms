@@ -389,6 +389,7 @@ class BaseHandler(CommonRequestHandler):
         # information. If r_params is not defined (i.e. something went
         # *really* bad) we simply return a basic textual error notice.
         if hasattr(self, 'r_params'):
+            self.r_params["http_error_message"] = kwargs["exc_info"][1]
             self.render("error.html", status_code=status_code, **self.r_params)
         else:
             self.write("A critical error has occurred :-(")
@@ -1064,7 +1065,7 @@ class SubmitHandler(BaseHandler):
 
             """
 
-            languageSubmitted = self.get_argument("submission_lang", "")
+            languageSubmitted = self.get_argument("submission_lang")
 
             # Remember this submission's language as the last language used
             self.set_cookie("last_lang", languageSubmitted)

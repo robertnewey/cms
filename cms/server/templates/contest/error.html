@@ -7,9 +7,16 @@
     <h1>{{ _("Error %d") % status_code }}</h1>
 </div>
 
+
+{% if http_error_message is not None %}
+<p>
+{{ _("An error occured while the server was handling your request: %s") % http_error_message }}
+</p>
+{% else %}
 <p>
 {{ _("An error occured while the server was handling your request.") }}
 </p>
+{% end %}
 
 <p>
 {{ _("Note that attempts to tamper with Contest Management System (such as probing the server with customized URLs) may be considered cheating and may lead to disqualification.") }}
