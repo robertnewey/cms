@@ -39,6 +39,8 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
+from cms import LANGUAGE_TO_TIME_LIMIT_MAP
+
 import json
 
 from cms.db import File, Manager, Executable, UserTestExecutable, Evaluation
@@ -262,7 +264,10 @@ class EvaluationJob(Job):
         self.executables = executables
         self.input = input
         self.output = output
-        self.time_limit = time_limit
+        if time_limit is not None:
+            self.time_limit = time_limit * LANGUAGE_TO_TIME_LIMIT_MAP[language]
+        else:
+            self.time_limit = None
         self.memory_limit = memory_limit
         self.success = success
         self.outcome = outcome
