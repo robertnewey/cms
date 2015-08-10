@@ -347,6 +347,20 @@ def format_status_text(status, translator=None):
                      "text: %r", status, exc_info=True)
         return translator("N/A")
 
+def simplify_status_text(status):
+    mapping_startswith = {
+        "Execution failed because of sandbox error"             : "Judge error, please notify judges",
+        "Execution killed because of forbidden syscall"         : "Program killed due to illegal operation, double check rules regarding allowed system calls",
+        "Execution timed out (wall clock limit exceeded)"       : "Time limit exceeded",
+        "Execution timed out"                                   : "Time limit exceeded",
+        "Execution killed because of forbidden file access:"    : "Forbidden file access, check input/output filenames",
+        "Execution killed with signal"                          : "Program crashed (possibly out of memory)",
+        "Execution failed because the return code was nonzero"  : "Return code nonzero, possibly due to exception being thrown"
+    }
+    for old, new in mapping_startswith.items():
+        if status.startswith(old):
+            return new
+    return status
 
 def compilation_step(sandbox, commands):
     """Execute some compilation commands in the sandbox, setting up the

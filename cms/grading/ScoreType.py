@@ -375,7 +375,7 @@ class AIOCScoreTypeGroup(ScoreTypeAlone):
     N_("Memory used")
     N_("N/A")
     TEMPLATE = """\
-{% from cms.grading import format_status_text %}
+{% from cms.grading import format_status_text, simplify_status_text %}
 {% from cms.server import format_size %}
 {% for st in details %}
     {% if "score" in st and "max_score" in st %}
@@ -424,7 +424,7 @@ class AIOCScoreTypeGroup(ScoreTypeAlone):
                 <tr class="partiallycorrect">
             {% end %}
                     <td>{{ _(tc["outcome"]) }}</td>
-                    <td>{{ format_status_text(tc["text"], _) }}</td>
+                    <td>{{ simplify_status_text(format_status_text(tc["text"], _)) }}</td>
                     <td>
             {% if "time" in tc and tc["time"] is not None %}
                         {{ _("%(seconds)0.3f s") % {'seconds': tc["time"]} }}
