@@ -359,6 +359,7 @@ def AIOTranslator(translator):
             ("Execution timed out",                                    "Time limit exceeded"),
             ("Execution killed because of forbidden file access:",     "Forbidden file access. Please check your input/output filenames match those in the problem"),
             ("Execution killed with signal 11",                        "Program crashed after accessing or requesting invalid memory"),
+            ("Execution killed with signal 10",                        "Program crashed after accessing or requesting invalid memory"),
             ("Execution killed with signal 8",                         "Program crashed after a division by zero error"),
             ("Execution killed with signal",                           "Program crashed for an unknown reason"),
             ("Execution failed because the return code was nonzero",   "Return code nonzero, possibly due to exception being thrown")
