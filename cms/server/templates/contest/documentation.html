@@ -39,11 +39,20 @@
     </tr>
   </thead>
   <tbody>
-    {% for message in EVALUATION_MESSAGES.all() %}
-    <tr>
-      <td><em>{{ message.message }}</em></td>
-      <td>{{ message.help }}</td>
-    </tr>
+    {% if interface_type == 'aio' %}
+      {% for message in EVALUATION_MESSAGES_AIO.all() %}
+      <tr>
+        <td><em>{{ message.message }}</em></td>
+        <td>{{ message.help }}</td>
+      </tr>
+      {% end %}
+    {% else %}
+      {% for message in EVALUATION_MESSAGES.all() %}
+      <tr>
+        <td><em>{{ message.message }}</em></td>
+        <td>{{ message.help }}</td>
+      </tr>
+      {% end %}
     {% end %}
   </tbody>
 </table>

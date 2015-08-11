@@ -503,7 +503,7 @@ class DocumentationHandler(BaseHandler):
     """
     @tornado.web.authenticated
     def get(self):
-        self.render("documentation.html", **self.r_params)
+        self.render("documentation.html", interface_type=self.contest.interface_type, **self.r_params)
 
 
 class LoginHandler(BaseHandler):
