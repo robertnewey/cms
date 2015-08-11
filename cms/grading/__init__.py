@@ -202,10 +202,11 @@ EVALUATION_MESSAGES_AIO = MessageCollection([
                  N_("Your program tried to access or request invalid "
                     "memory.")),
     HumanMessage("syscall",
-                 N_("Program killed due to illegal operation. Please check "
-                    "the rules regarding allowable system calls"),
                  N_("Your submission was stopped because it tried to "
-                    "interact with the operating system in a forbidden way.")),
+                    "interact with the operating system in a forbidden way."),
+                 N_("Your submission tried to interact with the operating "
+                    "system in a forbidden way, check the rules regarding "
+                    "what libraries are allowed for your language.")),
     HumanMessage("signal",
                  N_("Program crashed for an unknown reason"),
                  N_("...?")),
@@ -404,7 +405,7 @@ def AIOTranslator(translator):
     def simplify_status_text(status):
         mapping_startswith = [
             ("Execution failed because of sandbox error",              "Judge error, please notify judges"),
-            ("Execution killed because of forbidden syscall",          "Program killed due to illegal operation. Please check the rules regarding allowable system calls"),
+            ("Execution killed because of forbidden syscall",          "Your submission was stopped because it tried to interact with the operating system in a forbidden way"),
             ("Execution timed out (wall clock limit exceeded)",        "Time limit exceeded"),
             ("Execution timed out",                                    "Time limit exceeded"),
             ("Execution killed because of forbidden file access:",     "Forbidden file access. Please check your input/output filenames match those in the problem"),
