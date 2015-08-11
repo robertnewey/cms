@@ -71,7 +71,7 @@ class ScoreType(object):
         self.max_score, self.max_public_score, self.ranking_headers = \
             self.max_scores()
 
-    def get_html_details(self, score_details, translator=None, AWS=False, interface_type=None):
+    def get_html_details(self, score_details, translator=None, interface_type=None):
         """Return an HTML string representing the score details of a
         submission.
 
@@ -94,7 +94,7 @@ class ScoreType(object):
             return translator("Score details temporarily unavailable.")
         else:
             return Template(self.TEMPLATE).generate(details=score_details,
-                                                    _=translator, AWS=AWS, interface_type=interface_type)
+                                                    _=translator, interface_type=interface_type)
 
     def max_scores(self):
         """Returns the maximum score that one could aim to in this
@@ -424,7 +424,7 @@ class AIOCScoreTypeGroup(ScoreTypeAlone):
                 <tr class="partiallycorrect">
             {% end %}
                     <td>{{ _(tc["outcome"]) }}</td>
-                    <td>{{ format_status_text(tc["text"], _, AWS=AWS, interface_type=interface_type) }}</td>
+                    <td>{{ format_status_text(tc["text"], _, interface_type=interface_type) }}</td>
                     <td>
             {% if "time" in tc and tc["time"] is not None %}
                         {{ _("%(seconds)0.3f s") % {'seconds': tc["time"]} }}
