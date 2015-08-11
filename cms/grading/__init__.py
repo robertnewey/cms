@@ -209,7 +209,7 @@ EVALUATION_MESSAGES_AIO = MessageCollection([
                     "what libraries are allowed for your language.")),
     HumanMessage("signal",
                  N_("Program crashed for an unknown reason"),
-                 N_("...?")),
+                 N_("Please contact the judges via the communication tab")),
     HumanMessage("fileaccess",
                  N_("Forbidden file access. Please check your input/output "
                     "filenames match those in the problem"),
@@ -220,7 +220,7 @@ EVALUATION_MESSAGES_AIO = MessageCollection([
                  N_("Return code nonzero, possibly due to exception "
                     "being thrown"),
                  N_("Your submission failed because it exited with a return "
-                    "code different from 0, in Python, PHP, Java and C#, "
+                    "code different from 0. In Python, PHP, Java and C#, "
                     "this can be caused by your program throwing an exception.")),
     HumanMessage("judge",
                  N_("Judge error, please notify judges"),
