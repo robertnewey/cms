@@ -129,9 +129,9 @@
 
   <div class="score_details" id="evaluation_{{ s.id }}">
     {% if s.tokened() %}
-      {% raw st.get_html_details(sr.score_details) %}
+      {% raw st.get_html_details(sr.score_details, AWS=True) %}
     {% else %}
-      {% raw st.get_html_details(sr.public_score_details) %}
+      {% raw st.get_html_details(sr.public_score_details, AWS=True) %}
     {% end %}
   </div>
 </div>

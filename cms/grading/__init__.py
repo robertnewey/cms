@@ -40,7 +40,7 @@ from cms import config, \
     LANG_C, LANG_CPP, LANG_CS, LANG_PASCAL, LANG_PYTHON2, LANG_PYTHON3, LANG_PHP, LANG_JAVA, \
     SCORE_MODE_MAX, LANGUAGE_TO_MAX_PROCCESSORS, PYTHON3_COMPILE_NAME, \
     JAVA_CLASS_NAME
-from cms.db import Submission
+from cms.db import Submission, Contest
 from cms.grading.Sandbox import Sandbox
 
 
@@ -311,7 +311,7 @@ def get_evaluation_commands(language, executable_filename):
     return commands
 
 
-def format_status_text(status, translator=None):
+def format_status_text(status, translator=None, AWS=False, interface_type=None):
     """Format the given status text in the given locale.
 
     A status text is the content of SubmissionResult.compilation_text,
@@ -335,6 +335,9 @@ def format_status_text(status, translator=None):
     if translator is None:
         translator = lambda x: x
 
+    if not AWS and interface_type == 'aio':
+        translator = AIOTranslator(translator)
+
     try:
         if isinstance(status, six.text_type):
             status = json.loads(status)
@@ -347,20 +350,22 @@ def format_status_text(status, translator=None):
                      "text: %r", status, exc_info=True)
         return translator("N/A")
 
-def simplify_status_text(status):
-    mapping_startswith = {
-        "Execution failed because of sandbox error"             : "Judge error, please notify judges",
-        "Execution killed because of forbidden syscall"         : "Program killed due to illegal operation, double check rules regarding allowed system calls",
-        "Execution timed out (wall clock limit exceeded)"       : "Time limit exceeded",
-        "Execution timed out"                                   : "Time limit exceeded",
-        "Execution killed because of forbidden file access:"    : "Forbidden file access, check input/output filenames",
-        "Execution killed with signal"                          : "Program crashed (possibly out of memory)",
-        "Execution failed because the return code was nonzero"  : "Return code nonzero, possibly due to exception being thrown"
-    }
-    for old, new in mapping_startswith.items():
-        if status.startswith(old):
-            return new
-    return status
+def AIOTranslator(translator):
+    def simplify_status_text(status):
+        mapping_startswith = {
+            "Execution failed because of sandbox error"             : "Judge error, please notify judges",
+            "Execution killed because of forbidden syscall"         : "Program killed due to illegal operation, double check rules regarding allowed system calls",
+            "Execution timed out (wall clock limit exceeded)"       : "Time limit exceeded",
+            "Execution timed out"                                   : "Time limit exceeded",
+            "Execution killed because of forbidden file access:"    : "Forbidden file access, check input/output filenames",
+            "Execution killed with signal"                          : "Program crashed (possibly out of memory)",
+            "Execution failed because the return code was nonzero"  : "Return code nonzero, possibly due to exception being thrown"
+        }
+        for old, new in mapping_startswith.items():
+            if status.startswith(old):
+                return new
+        return status
+    return lambda x:translator(simplify_status_text(x))
 
 def compilation_step(sandbox, commands):
     """Execute some compilation commands in the sandbox, setting up the
