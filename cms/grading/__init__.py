@@ -186,16 +186,16 @@ EVALUATION_MESSAGES_AIO = MessageCollection([
                  N_("Your submission ran, but gave the wrong answer")),
     HumanMessage("nooutput",
                  N_("Evaluation didn't produce file <filename>"),
-                 N_("Your submission ran, but did not write on the "
+                 N_("Your submission ran, but did not write to the "
                     "correct output file")),
     HumanMessage("timeout",
                  N_("Time limit exceeded"),
-                 N_("Your submission used too much CPU time.")),
+                 N_("Your submission ran for too long.")),
     HumanMessage("div0",
                  N_("Program crashed after a division by zero error"),
-                 N_("Your program divided by zero. Note that if you "
-                    "divide by zero in Python, PHP, Java or C#, you "
-                    "will instead get a return code nonzero message.")),
+                 N_("Your program tried to divide by zero. Note that only "
+                    "C, C++ and Pascal programs will get this message, "
+                    "other languages will get return code nonzero instead.")),
     HumanMessage("segfault",
                  N_("Program crashed after accessing or requesting "
                     "invalid memory"),
@@ -204,9 +204,8 @@ EVALUATION_MESSAGES_AIO = MessageCollection([
     HumanMessage("syscall",
                  N_("Program killed due to illegal operation. Please check "
                     "the rules regarding allowable system calls"),
-                 N_("Your submission was killed because it tried to use "
-                    "a forbidden syscall, the rules contain a full list "
-                    "of allowable calls.")),
+                 N_("Your submission was stopped because it tried to "
+                    "interact with the operating system in a forbidden way.")),
     HumanMessage("signal",
                  N_("Program crashed for an unknown reason"),
                  N_("...?")),
@@ -224,7 +223,7 @@ EVALUATION_MESSAGES_AIO = MessageCollection([
                     "this can be caused by your program throwing an exception.")),
     HumanMessage("judge",
                  N_("Judge error, please notify judges"),
-                 N_("There was an error on our side while evaluation your "
+                 N_("There was an error on our side while evaluating your "
                     "program, send a message via the communication tab.")),
 ])
 
