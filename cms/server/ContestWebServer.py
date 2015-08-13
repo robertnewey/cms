@@ -1051,10 +1051,7 @@ class SubmitHandler(BaseHandler):
                     file_digests[filename] = \
                         last_submission_t.files[filename].digest
 
-        # We need to ensure that everytime we have a .%l in our
-        # filenames, the user has the extension of an allowed
-        # language, and that all these are the same (i.e., no
-        # mixed-language submissions).
+        # We get the submission language from the drop down box
         def which_language(user_filename):
             """Determine the language of user_filename from its
             extension.
