@@ -65,7 +65,7 @@ from sqlalchemy import func
 from werkzeug.http import parse_accept_header
 from werkzeug.datastructures import LanguageAccept
 
-from cms import SOURCE_EXT_TO_LANGUAGE_MAP, ConfigError, config, ServiceCoord
+from cms import SOURCE_EXT_TO_LANGUAGE_MAP, LANGUAGE_NAMES, ConfigError, config, ServiceCoord
 from cms.io import WebService
 from cms.db import Session, Contest, User, Task, Question, Submission, Token, \
     File, UserTest, UserTestFile, UserTestManager, PrintJob
@@ -349,6 +349,8 @@ class BaseHandler(CommonRequestHandler):
         ret["cookie_lang"] = self.cookie_lang
         ret["browser_lang"] = self.browser_lang
 
+        ret["submission_lang_list"] = LANGUAGE_NAMES
+
         return ret
 
     def finish(self, *args, **kwds):
@@ -387,6 +389,7 @@ class BaseHandler(CommonRequestHandler):
         # information. If r_params is not defined (i.e. something went
         # *really* bad) we simply return a basic textual error notice.
         if hasattr(self, 'r_params'):
+            self.r_params["http_error_message"] = kwargs["exc_info"][1]
             self.render("error.html", status_code=status_code, **self.r_params)
         else:
             self.write("A critical error has occurred :-(")
@@ -1041,17 +1044,14 @@ class SubmitHandler(BaseHandler):
             for filename in required.difference(provided):
                 if filename in last_submission_t.files:
                     # If we retrieve a language-dependent file from
-                    # last submission, we take not that language must
+                    # last submission, we take note that language must
                     # be the same.
                     if "%l" in filename:
                         submission_lang = last_submission_t.language
                     file_digests[filename] = \
                         last_submission_t.files[filename].digest
 
-        # We need to ensure that everytime we have a .%l in our
-        # filenames, the user has the extension of an allowed
-        # language, and that all these are the same (i.e., no
-        # mixed-language submissions).
+        # We get the submission language from the drop down box
         def which_language(user_filename):
             """Determine the language of user_filename from its
             extension.
@@ -1061,10 +1061,12 @@ class SubmitHandler(BaseHandler):
                              if it is not a recognized language.
 
             """
-            for source_ext, language in SOURCE_EXT_TO_LANGUAGE_MAP.iteritems():
-                if user_filename.endswith(source_ext):
-                    return language
-            return None
+
+            languageSubmitted = self.get_argument("submission_lang")
+
+            # Remember this submission's language as the last language used
+            self.set_cookie("last_lang", languageSubmitted)
+            return languageSubmitted
 
         error = None
         for our_filename in files:
