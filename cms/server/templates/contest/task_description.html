@@ -119,6 +119,16 @@
             <td colspan="2">{{ _("%(mb)d MiB") % {"mb": task.active_dataset.memory_limit} }}</td>
         </tr>
 {% end %}
+{% if task_type.name == "Batch" %}
+        <tr>
+            <th>{{ _("Input File") }}</th>
+            <td colspan="2">{{ task_type.input_filename if task_type.input_filename != "" else "standard input" }}</td>
+        </tr>
+        <tr>
+            <th>{{ _("Output File") }}</th>
+            <td colspan="2">{{ task_type.output_filename if task_type.output_filename != "" else "standard output" }}</td>
+        </tr>
+{% end %}
 {% set compilation_commands = task_type.get_compilation_commands([x.filename for x in task.submission_format]) %}
 {% if compilation_commands is not None %}
 {% set compilation_commands = {lang: compilation_commands[lang] for lang in contest.languages} %}

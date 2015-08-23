@@ -106,6 +106,24 @@ class Batch(TaskType):
         # TODO add some details if a grader/comparator is used, etc...
         return "Batch"
 
+    @property
+    def input_filename(self):
+        """Returns the name of the input file.
+
+        return (str): the name
+        
+        """
+        return self.parameters[1][0]
+
+    @property
+    def output_filename(self):
+        """Returns the name of the output file.
+
+        return (str): the name
+        
+        """
+        return self.parameters[1][1]
+
     def get_compilation_commands(self, submission_format):
         """See TaskType.get_compilation_commands."""
         res = dict()
