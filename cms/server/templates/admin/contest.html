@@ -29,6 +29,15 @@
       <td><input type="text" name="allowed_localizations" value="{{ ",".join(contest.allowed_localizations) }}"/></td>
     </tr>
     <tr>
+      <td>Interface type (custom interface)</td>
+      <td>
+        <select name="interface_type">
+          <option value="default" {{ "selected" if contest.interface_type == "default" else "" }}>Default</option>
+          <option value="aio" {{ "selected" if contest.interface_type == "aio" else "" }}>AIO</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
       <td>Languages allowed</td>
       <td>
         {% for lang in LANGUAGES %}

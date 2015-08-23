@@ -25,6 +25,15 @@
       <td><input type="text" name="allowed_localizations" value=""/></td>
     </tr>
     <tr>
+      <td>Interface type (custom interface)</td>
+      <td>
+        <select name="interface_type">
+          <option value="default">Default</option>
+          <option value="aio">AIO</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
       <td>Languages allowed</td>
       <td>
         {% for lang in LANGUAGES %}

@@ -73,6 +73,13 @@ class Contest(Base):
         nullable=False,
         default=[])
 
+    # The custom interface (if any) to use for contestants. "default"
+    # indicates the standard CMS interface.
+    interface_type = Column(
+        Enum("default", "aio", name="interface_type"),
+        nullable=False,
+        default="default")
+
     # The list of languages shorthand allowed in the contest,
     # e.g. cpp. The codes must be the same as those in cms.LANGUAGES.
     languages = Column(
