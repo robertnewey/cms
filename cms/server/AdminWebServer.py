@@ -595,6 +595,7 @@ class AddContestHandler(BaseHandler):
             else:
                 attrs["allowed_localizations"] = []
 
+            self.get_string(attrs, "interface_type")
             attrs["languages"] = self.get_arguments("languages", [])
 
             self.get_string(attrs, "token_mode")
@@ -662,6 +663,7 @@ class ContestHandler(BaseHandler):
             else:
                 attrs["allowed_localizations"] = []
 
+            self.get_string(attrs, "interface_type")
             attrs["languages"] = self.get_arguments("languages", [])
 
             self.get_string(attrs, "token_mode")
