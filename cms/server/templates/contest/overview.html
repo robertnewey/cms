@@ -157,12 +157,16 @@
         <tr>
             <th>{{ _("Task") }}</th>
             <th>{{ _("Name") }}</th>
+{% if contest.interface_type != "aio" %}
+            <th>{{ _("Type") }}</th>
+{% end %}
             <th>{{ _("Time limit") }}</th>
             <th>{{ _("Memory limit") }}</th>
-        {% if contest.interface_type != "aio" %}
-            <th>{{ _("Type") }}</th>
-            <th>{{ _("Files") }}</th>
-        {% end %}
+            <th>{{ _("Input file") }}</th>
+            <th>{{ _("Output file") }}</th>
+{% if contest.interface_type != "aio" %}
+            <th>{{ _("Submission files") }}</th>
+{% end %}
 {% if tokens_contest != 0 and tokens_tasks != 0 %}
             <th>{{ _("Tokens") }}</th>
 {% end %}
@@ -174,6 +178,10 @@
         <tr>
             <th>{{ t_iter.name }}</th>
             <td>{{ t_iter.title }}</td>
+    {% set task_type = get_task_type(dataset=t_iter.active_dataset) %}
+    {% if contest.interface_type != "aio" %}
+            <td>{{ task_type.name }}</td>
+    {% end %}
             <td>
     {% if t_iter.active_dataset.time_limit is not None %}
         {% if t_iter.active_dataset.time_limit == 1.0 %}
@@ -192,10 +200,23 @@
         {{ _("N/A") }}
     {% end %}
             </td>
-        {% if contest.interface_type != "aio" %}
-            <td>{{ get_task_type(dataset=t_iter.active_dataset).name }}</td>
+            <td>
+    {% if task_type.name == "Batch" %}
+        {{ task_type.input_filename if task_type.input_filename != "" else "standard input" }}
+    {% else %}
+        {{ _("N/A") }}
+    {% end %}
+            </td>
+            <td>
+    {% if task_type.name == "Batch" %}
+        {{ task_type.output_filename if task_type.output_filename != "" else "standard output" }}
+    {% else %}
+        {{ _("N/A") }}
+    {% end %}
+            </td>
+    {% if contest.interface_type != "aio" %}
             <td>{{ " ".join(a.filename.replace("%l", extensions) for a in t_iter.submission_format) }}</td>
-        {% end %}
+    {% end %}
     {% if tokens_contest != 0 and tokens_tasks != 0 %}
             <td>
         {% if t_iter.token_mode in ("finite", "infinite") %}
