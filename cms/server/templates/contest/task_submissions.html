@@ -231,6 +231,7 @@ $(document).ready(function () {
 {% else %}
         <col class="total_score"/>
 {% end %}
+        <col class="language"/>
         <col class="files"/>
 {% if tokens_contest != 0 and tokens_tasks != 0 %}
         <col class="token"/>
@@ -250,6 +251,7 @@ $(document).ready(function () {
 {% else %}
             <th class="total_score">{{ _("Score") }}</th>
 {% end %}
+            <th class="language">{{ _("Language") }}</th>
             <th class="files">{{ _("Files") }}</th>
 {% if tokens_contest != 0 and tokens_tasks != 0 %}
             <th class="token">{{ _("Token") }}</th>
