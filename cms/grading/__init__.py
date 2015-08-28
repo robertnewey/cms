@@ -311,7 +311,7 @@ def get_evaluation_commands(language, executable_filename):
     return commands
 
 
-def format_status_text(status, translator=None):
+def format_status_text(status, translator=None, interface_type=None):
     """Format the given status text in the given locale.
 
     A status text is the content of SubmissionResult.compilation_text,
@@ -335,6 +335,9 @@ def format_status_text(status, translator=None):
     if translator is None:
         translator = lambda x: x
 
+    if interface_type == 'aio':
+        translator = AIOTranslator(translator)
+
     try:
         if isinstance(status, six.text_type):
             status = json.loads(status)
@@ -347,6 +350,25 @@ def format_status_text(status, translator=None):
                      "text: %r", status, exc_info=True)
         return translator("N/A")
 
+def AIOTranslator(translator):
+    def simplify_status_text(status):
+        mapping_startswith = [
+            ("Execution failed because of sandbox error",              "Judge error, please notify judges"),
+            ("Execution killed because of forbidden syscall",          "Program killed due to illegal operation. Please check the rules regarding allowable system calls"),
+            ("Execution timed out (wall clock limit exceeded)",        "Time limit exceeded"),
+            ("Execution timed out",                                    "Time limit exceeded"),
+            ("Execution killed because of forbidden file access:",     "Forbidden file access. Please check your input/output filenames match those in the problem"),
+            ("Execution killed with signal 11",                        "Program crashed after accessing or requesting invalid memory"),
+            ("Execution killed with signal 10",                        "Program crashed after accessing or requesting invalid memory"),
+            ("Execution killed with signal 8",                         "Program crashed after a division by zero error"),
+            ("Execution killed with signal",                           "Program crashed for an unknown reason"),
+            ("Execution failed because the return code was nonzero",   "Return code nonzero, possibly due to exception being thrown")
+        ]
+        for old, new in mapping_startswith:
+            if status.startswith(old):
+                return new
+        return status
+    return lambda x:translator(simplify_status_text(x))
 
 def compilation_step(sandbox, commands):
     """Execute some compilation commands in the sandbox, setting up the
