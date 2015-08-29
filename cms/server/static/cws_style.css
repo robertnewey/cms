@@ -442,6 +442,13 @@ td.token_rules p:last-child {
     line-height: 18px;
 }
 
+#submission_lang {
+    height: auto;
+    padding-left: 2px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    padding-right: 0px;
+}
 
 /*** Submissions table */
 
