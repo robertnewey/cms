@@ -177,6 +177,57 @@ EVALUATION_MESSAGES = MessageCollection([
                     "code different from 0.")),
 ])
 
+EVALUATION_MESSAGES_AIO = MessageCollection([
+    HumanMessage("success",
+                 N_("Output is correct"),
+                 N_("Your submission ran and gave the correct answer")),
+    HumanMessage("wrong",
+                 N_("Output isn't correct"),
+                 N_("Your submission ran, but gave the wrong answer")),
+    HumanMessage("nooutput",
+                 N_("Evaluation didn't produce file <filename>"),
+                 N_("Your submission ran, but did not write to the "
+                    "correct output file")),
+    HumanMessage("timeout",
+                 N_("Time limit exceeded"),
+                 N_("Your submission ran for too long.")),
+    HumanMessage("div0",
+                 N_("Program crashed after a division by zero error"),
+                 N_("Your program tried to divide by zero. Note that only "
+                    "C, C++ and Pascal programs will get this message, "
+                    "other languages will get return code nonzero instead.")),
+    HumanMessage("segfault",
+                 N_("Program crashed after accessing or requesting "
+                    "invalid memory"),
+                 N_("Your program tried to access or request invalid "
+                    "memory.")),
+    HumanMessage("syscall",
+                 N_("Your submission was stopped because it tried to "
+                    "interact with the operating system in a forbidden way."),
+                 N_("Your submission tried to interact with the operating "
+                    "system in a forbidden way, check the rules regarding "
+                    "what libraries are allowed for your language.")),
+    HumanMessage("signal",
+                 N_("Program crashed for an unknown reason"),
+                 N_("Please contact the judges via the communication tab")),
+    HumanMessage("fileaccess",
+                 N_("Forbidden file access. Please check your input/output "
+                    "filenames match those in the problem"),
+                 N_("Your submission was killed because it tried to read "
+                    "or write a forbidden file, most likely you have "
+                    "mistyped the input or output filename.")),
+    HumanMessage("returncode",
+                 N_("Return code nonzero, possibly due to exception "
+                    "being thrown"),
+                 N_("Your submission failed because it exited with a return "
+                    "code different from 0. In Python, PHP, Java and C#, "
+                    "this can be caused by your program throwing an exception.")),
+    HumanMessage("judge",
+                 N_("Judge error, please notify judges"),
+                 N_("There was an error on our side while evaluating your "
+                    "program, send a message via the communication tab.")),
+])
+
 
 class JobException(Exception):
     """Exception raised by a worker doing a job.
@@ -354,7 +405,7 @@ def AIOTranslator(translator):
     def simplify_status_text(status):
         mapping_startswith = [
             ("Execution failed because of sandbox error",              "Judge error, please notify judges"),
-            ("Execution killed because of forbidden syscall",          "Program killed due to illegal operation. Please check the rules regarding allowable system calls"),
+            ("Execution killed because of forbidden syscall",          "Your submission was stopped because it tried to interact with the operating system in a forbidden way"),
             ("Execution timed out (wall clock limit exceeded)",        "Time limit exceeded"),
             ("Execution timed out",                                    "Time limit exceeded"),
             ("Execution killed because of forbidden file access:",     "Forbidden file access. Please check your input/output filenames match those in the problem"),
