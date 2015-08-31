@@ -444,20 +444,25 @@ def compilation_step(sandbox, commands):
 
     # Actually run the compilation commands.
     logger.debug("Starting compilation step.")
-    for command in commands:
+
+    stdout = ""
+    stderr = ""
+    for index, command in enumerate(commands):
         box_success = sandbox.execute_without_std(command, wait=True)
         if not box_success:
             logger.error("Compilation aborted because of "
                          "sandbox error in `%s'.", sandbox.path)
             return False, None, None, None
+        else:
+            if index == 0:
+                stdout = sandbox.get_file_to_string("compiler_stdout.txt")
+                stdout = unicode(stdout, 'utf-8', errors='replace')
+                stderr = sandbox.get_file_to_string("compiler_stderr.txt")
+                stderr = unicode(stderr, 'utf-8', errors='replace')
 
     # Detect the outcome of the compilation.
     exit_status = sandbox.get_exit_status()
     exit_code = sandbox.get_exit_code()
-    stdout = sandbox.get_file_to_string("compiler_stdout.txt")
-    stdout = unicode(stdout, 'utf-8', errors='replace')
-    stderr = sandbox.get_file_to_string("compiler_stderr.txt")
-    stderr = unicode(stderr, 'utf-8', errors='replace')
 
     # And retrieve some interesting data.
     plus = {
