@@ -191,8 +191,7 @@ def default_argument_parser(description, cls, ask_contest=None, multi_contest=Fa
     ask_contest (function|None): None if the service does not require
         a contest, otherwise a function that returns a contest_id
         (after asking the admins?)
-    multi_contest (Boolean): True if we are return are to return a 
-        list of contests.
+    multi_contest (Boolean): True if we are to return a list of contests.
 
     return (object): an instance of a service.
 
