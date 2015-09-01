@@ -29,14 +29,14 @@ import cmstestsuite.tasks.batch_fileio_managed as batch_fileio_managed
 import cmstestsuite.tasks.communication as communication
 
 from cms import LANGUAGES, LANG_C, LANG_CPP, LANG_PASCAL, LANG_JAVA, \
-    LANG_PYTHON
+    LANG_PYTHON2, LANG_PYTHON3
 from cmstestsuite.Test import Test, CheckOverallScore, CheckCompilationFail, \
     CheckTimeout, CheckTimeoutWall, CheckNonzeroReturn
 
 
 ALL_LANGUAGES = tuple(LANGUAGES)
 NON_INTERPRETED_LANGUAGES = (LANG_C, LANG_CPP, LANG_PASCAL)
-COMPILED_LANGUAGES = (LANG_C, LANG_CPP, LANG_PASCAL, LANG_JAVA, LANG_PYTHON)
+COMPILED_LANGUAGES = (LANG_C, LANG_CPP, LANG_PASCAL, LANG_JAVA, LANG_PYTHON2, LANG_PYTHON3)
 
 ALL_TESTS = [
 

@@ -180,7 +180,7 @@ def get_service_shards(service):
         i += 1
 
 
-def default_argument_parser(description, cls, ask_contest=None):
+def default_argument_parser(description, cls, ask_contest=None, multi_contest=False):
     """Default argument parser for services.
 
     This has two versions, depending on whether the service needs a
@@ -191,6 +191,7 @@ def default_argument_parser(description, cls, ask_contest=None):
     ask_contest (function|None): None if the service does not require
         a contest, otherwise a function that returns a contest_id
         (after asking the admins?)
+    multi_contest (Boolean): True if we are to return a list of contests.
 
     return (object): an instance of a service.
 
@@ -204,8 +205,9 @@ def default_argument_parser(description, cls, ask_contest=None):
     contest_id_help = "id of the contest to automatically load"
     if ask_contest is None:
         contest_id_help += " (ignored)"
+    multi_contest_params = {'nargs':'+'} if multi_contest else {}
     parser.add_argument("-c", "--contest-id", action="store", type=int,
-                        help=contest_id_help)
+                        help=contest_id_help, **multi_contest_params)
     args = parser.parse_args()
 
     try:
@@ -219,7 +221,13 @@ def default_argument_parser(description, cls, ask_contest=None):
         if args.contest_id is not None:
             # Test if there is a contest with the given contest id.
             from cms.db import is_contest_id
-            if not is_contest_id(args.contest_id):
+            if multi_contest:
+                for contest_id in args.contest_id:
+                    if not is_contest_id(contest_id):
+                        print("There is no contest with the specified id. "
+                          "Please try again.", file=sys.stderr)
+                        sys.exit(1)
+            elif not is_contest_id(args.contest_id):
                 print("There is no contest with the specified id. "
                       "Please try again.", file=sys.stderr)
                 sys.exit(1)
