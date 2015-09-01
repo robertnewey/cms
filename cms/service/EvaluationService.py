@@ -428,7 +428,8 @@ class WorkerPool(object):
         """
         shard = worker_coord.shard
         logger.info("Worker %s online again.", shard)
-        self._worker[shard].precache_files(contest_id=self._service.contest_id)
+        for contest_id in self._service.contest_ids:
+            self._worker[shard].precache_files(contest_id=contest_id)
         # We don't requeue the operation, because a connection lost
         # does not invalidate a potential result given by the worker
         # (as the problem was the connection and not the machine on
@@ -837,10 +838,10 @@ class EvaluationService(TriggeredService):
     # How often we check if a worker is connected.
     WORKER_CONNECTION_CHECK_TIME = timedelta(seconds=10)
 
-    def __init__(self, shard, contest_id):
+    def __init__(self, shard, contest_ids):
         super(EvaluationService, self).__init__(shard)
 
-        self.contest_id = contest_id
+        self.contest_ids = contest_ids
         self.post_finish_lock = gevent.coros.RLock()
 
         self.scoring_service = self.connect_to(
@@ -916,16 +917,17 @@ class EvaluationService(TriggeredService):
         """
         counter = 0
         with SessionGen() as session:
-            contest = session.query(Contest).\
-                filter_by(id=self.contest_id).first()
+            contests = session.query(Contest).\
+                filter(Contest.id.in_(self.contest_ids)).all()
 
             # Scan through submissions and user tests
-            for submission in contest.get_submissions():
-                counter += self.submission_enqueue_operations(submission,
-                                                              check_again=True)
-            for user_test in contest.get_user_tests():
-                counter += self.user_test_enqueue_operations(user_test,
-                                                             check_again=True)
+            for contest in contests:
+                for submission in contest.get_submissions():
+                    counter += self.submission_enqueue_operations(submission,
+                                                                  check_again=True)
+                for user_test in contest.get_user_tests():
+                    counter += self.user_test_enqueue_operations(user_test,
+                                                                 check_again=True)
 
         return counter
 
@@ -956,7 +958,7 @@ class EvaluationService(TriggeredService):
                 .join(Dataset)\
                 .join(Task, Dataset.task_id == Task.id)\
                 .filter(Task.active_dataset_id == SubmissionResult.dataset_id)\
-                .filter(Task.contest_id == self.contest_id)
+                .filter(Task.contest_id.in_(self.contest_ids))
 
             compiled = base_query.filter(SubmissionResult.filter_compiled())
             evaluated = compiled.filter(SubmissionResult.filter_evaluated())
@@ -1533,12 +1535,13 @@ class EvaluationService(TriggeredService):
 
         with SessionGen() as session:
             # First we load all involved submissions.
-            submissions = get_submissions(
-                # Give contest_id only if all others are None.
-                self.contest_id
-                if {user_id, task_id, submission_id} == {None}
-                else None,
-                user_id, task_id, submission_id, session)
+            # Give contest_id only if all others are None.
+            if {user_id, task_id, submission_id} != {None}:
+                submissions = get_submissions(None, 
+                    user_id, task_id, submission_id, session)
+            else:
+                submissions_multi = [get_submissions(contest_id, None, None, None, session) for contest_id in self.contest_ids]
+                submissions = [v for sl in submissions_multi for v in sl]
 
             # Then we get all relevant operations, and we remove them
             # both from the queue and from the pool (i.e., we ignore
@@ -1557,12 +1560,13 @@ class EvaluationService(TriggeredService):
 
             # Then we find all existing results in the database, and
             # we remove them.
-            submission_results = get_submission_results(
-                # Give contest_id only if all others are None.
-                self.contest_id
-                if {user_id, task_id, submission_id, dataset_id} == {None}
-                else None,
-                user_id, task_id, submission_id, dataset_id, session)
+            if {user_id, task_id, submission_id, dataset_id} != {None}:
+                submission_results = get_submission_results(
+                    None, user_id, task_id, submission_id, dataset_id, session)
+            else:
+                submission_results_multi = [get_submission_results(contest_id, None, None, None, None, session) for contest_id in self.contest_ids]
+                submission_results = [v for sl in submission_results_multi for v in sl]
+                
             logger.info("Submission results to invalidate %s for: %d.",
                         level, len(submission_results))
             for submission_result in submission_results:
