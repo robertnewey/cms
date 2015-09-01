@@ -233,7 +233,8 @@ def default_argument_parser(description, cls, ask_contest=None, multi_contest=Fa
                 sys.exit(1)
             return cls(args.shard, args.contest_id)
         else:
-            return cls(args.shard, ask_contest())
+            contest_id = ask_contest()
+            return cls(args.shard, [contest_id] if multi_contest else contest_id)
     else:
         return cls(args.shard)
 
