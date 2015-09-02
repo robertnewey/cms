@@ -355,7 +355,7 @@ def get_evaluation_commands(language, executable_filename):
     	command = ["/usr/bin/mono", executable_filename]
     	commands.append(command)
     elif language == LANG_PHP:
-        command = ["/usr/bin/php5", executable_filename]
+        command = ["/usr/bin/php5", "-d memory_limit=-1", executable_filename]
         commands.append(command)
     else:
         raise ValueError("Unknown language %s." % language)
