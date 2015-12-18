@@ -35,6 +35,7 @@ from cms.grading.TaskType import TaskType, \
 from cms.grading.ParameterTypes import ParameterTypeChoice
 from cms.grading import white_diff_step, evaluation_step, \
     extract_outcome_and_text
+from cms.grading.Sandbox import Sandbox
 
 import bz2, base64, zipfile
 
@@ -192,9 +193,15 @@ class Codebreaker(TaskType):
             success, _ = evaluation_step(
                 sandbox,
                 [eval_step_command],
+                time_limit = job.time_limit,
                 max_processes = 30)
             if success:
-                outcome, text = extract_outcome_and_text(sandbox)
+                if sandbox.get_exit_status() == Sandbox.EXIT_TIMEOUT or
+                        sandbox.get_exit_status() == Sandbox.EXIT_SIGNAL:
+                    outcome = 1.0
+                    text = "You have successfully broken this code"
+                else:
+                    outcome, text = extract_outcome_and_text(sandbox)
 
         # Whatever happened, we conclude.
         job.success = success
