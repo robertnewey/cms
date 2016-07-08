@@ -196,7 +196,7 @@ class Codebreaker(TaskType):
                 time_limit = job.time_limit,
                 max_processes = 30)
             if success:
-                if sandbox.get_exit_status() == Sandbox.EXIT_TIMEOUT or
+                if sandbox.get_exit_status() == Sandbox.EXIT_TIMEOUT or \
                         sandbox.get_exit_status() == Sandbox.EXIT_SIGNAL:
                     outcome = 1.0
                     text = "You have successfully broken this code"
