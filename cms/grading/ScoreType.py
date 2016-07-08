@@ -565,3 +565,93 @@ class AIOCScoreTypeGroup(ScoreTypeAlone):
         """
         logger.error("Unimplemented method reduce.")
         raise NotImplementedError("Please subclass this class.")
+
+class IOIScoreTypeGroup(AIOCScoreTypeGroup):
+    """Template for the latest IOI specification for feedback to students.
+
+    """
+    TEMPLATE = """\
+{% from cms.grading import format_status_text %}
+{% from cms.server import format_size %}
+{% for st in details %}
+    {% if "score" in st and "max_score" in st %}
+        {% if st["score"] >= st["max_score"] %}
+<div class="subtask correct">
+        {% elif st["score"] <= 0.0 %}
+<div class="subtask notcorrect">
+        {% else %}
+<div class="subtask partiallycorrect">
+        {% end %}
+    {% else %}
+<div class="subtask undefined">
+    {% end %}
+    <div class="subtask-head">
+        <span class="title">
+            {{ _("%s") % st["idx"] }}
+        </span>
+    {% if "score" in st and "max_score" in st %}
+        <span class="score">
+            {{ '%g' % round(st["score"], 2) }} / {{ st["max_score"] }}
+        </span>
+    {% else %}
+        <span class="score">
+            {{ _("N/A") }}
+        </span>
+    {% end %}
+    </div>
+    <div class="subtask-body">
+        <table class="testcase-list">
+            <thead>
+                <tr>
+                    <th>{{ _("Case") }}</th>
+                    <th>{{ _("Outcome") }}</th>
+                    <th>{{ _("Details") }}</th>
+                    <th>{{ _("Execution time") }}</th>
+                    <th>{{ _("Memory used") }}</th>
+                </tr>
+            </thead>
+            <tbody>
+    {% for idx, tc in enumerate(st["testcases"]) %}
+        {% if "outcome" in tc and "text" in tc %}
+            {% if tc["outcome"] == "Correct" %}
+                {% if idx < len(st["testcases"]) - 1 %}
+                    {% continue %}
+                {% end %}
+                <tr class="correct">
+            {% elif tc["outcome"] == "Not correct" %}
+                <tr class="notcorrect">
+            {% else %}
+                <tr class="partiallycorrect">
+            {% end %}
+                    <td>{{ idx + 1 }}</td>
+                    <td>{{ _(tc["outcome"]) }}</td>
+                    <td>{{ format_status_text(tc["text"], _, interface_type=interface_type) }}</td>
+                    <td>
+            {% if "time" in tc and tc["time"] is not None %}
+                        {{ _("%(seconds)0.3f s") % {'seconds': tc["time"]} }}
+            {% else %}
+                        {{ _("N/A") }}
+            {% end %}
+                    </td>
+                    <td>
+            {% if "memory" in tc and tc["memory"] is not None %}
+                        {{ format_size(tc["memory"]) }}
+            {% else %}
+                        {{ _("N/A") }}
+            {% end %}
+                    </td>
+            {% break %}
+        {% else %}
+                <tr class="undefined">
+                    <td colspan="5">
+                        {{ _("N/A") }}
+                    </td>
+                </tr>
+            {% break %}
+        {% end %}
+    {% end %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% end %}"""
