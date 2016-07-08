@@ -596,7 +596,7 @@ class AddContestHandler(BaseHandler):
                 attrs["allowed_localizations"] = []
 
             self.get_string(attrs, "interface_type")
-            attrs["languages"] = self.get_arguments("languages", [])
+            attrs["languages"] = self.get_arguments("languages")
 
             self.get_string(attrs, "token_mode")
             self.get_int(attrs, "token_max_number")
@@ -664,7 +664,7 @@ class ContestHandler(BaseHandler):
                 attrs["allowed_localizations"] = []
 
             self.get_string(attrs, "interface_type")
-            attrs["languages"] = self.get_arguments("languages", [])
+            attrs["languages"] = self.get_arguments("languages")
 
             self.get_string(attrs, "token_mode")
             self.get_int(attrs, "token_max_number")
