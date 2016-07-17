@@ -32,12 +32,7 @@ def N_(message):
 
 
 class IOIGroupMin(IOIScoreTypeGroup):
-    """The score of a submission is the sum of the product of the
-    minimum of the ranges with the multiplier of that range.
-
-    Parameters are [[m, t], ... ] (see ScoreTypeGroup).
-
-    """
+    """See AIOCGroupMin."""
 
     def get_public_outcome(self, outcome, unused_parameter):
         """See ScoreTypeGroup."""

@@ -567,7 +567,7 @@ class AIOCScoreTypeGroup(ScoreTypeAlone):
         raise NotImplementedError("Please subclass this class.")
 
 class IOIScoreTypeGroup(AIOCScoreTypeGroup):
-    """Template for the latest IOI specification for feedback to students.
+    """Template for the 2016 IOI specification for feedback to students.
 
     """
     TEMPLATE = """\
@@ -603,11 +603,11 @@ class IOIScoreTypeGroup(AIOCScoreTypeGroup):
         <table class="testcase-list">
             <thead>
                 <tr>
-                    <th>{{ _("Case") }}</th>
                     <th>{{ _("Outcome") }}</th>
                     <th>{{ _("Details") }}</th>
                     <th>{{ _("Execution time") }}</th>
                     <th>{{ _("Memory used") }}</th>
+                    <th>{{ _("Case") }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -623,7 +623,6 @@ class IOIScoreTypeGroup(AIOCScoreTypeGroup):
             {% else %}
                 <tr class="partiallycorrect">
             {% end %}
-                    <td>{{ idx + 1 }}</td>
                     <td>{{ _(tc["outcome"]) }}</td>
                     <td>{{ format_status_text(tc["text"], _, interface_type=interface_type) }}</td>
                     <td>
@@ -640,6 +639,7 @@ class IOIScoreTypeGroup(AIOCScoreTypeGroup):
                         {{ _("N/A") }}
             {% end %}
                     </td>
+                    <td>{{ idx + 1 }}</td>
             {% break %}
         {% else %}
                 <tr class="undefined">
