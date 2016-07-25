@@ -589,6 +589,10 @@ class IOIScoreTypeGroup(AIOCScoreTypeGroup):
         <span class="title">
             {{ _("%s") % st["idx"] }}
         </span>
+    {% set sample_subtask = False %}
+    {% if "max_score" in st and st["max_score"] == 0 %}
+        {% set sample_subtask = True %}
+    {% end %}
     {% if "score" in st and "max_score" in st %}
         <span class="score">
             {{ '%g' % round(st["score"], 2) }} / {{ st["max_score"] }}
@@ -614,7 +618,7 @@ class IOIScoreTypeGroup(AIOCScoreTypeGroup):
     {% for idx, tc in enumerate(st["testcases"]) %}
         {% if "outcome" in tc and "text" in tc %}
             {% if tc["outcome"] == "Correct" %}
-                {% if idx < len(st["testcases"]) - 1 %}
+                {% if not sample_subtask and idx < len(st["testcases"]) - 1 %}
                     {% continue %}
                 {% end %}
                 <tr class="correct">
@@ -626,21 +630,23 @@ class IOIScoreTypeGroup(AIOCScoreTypeGroup):
                     <td>{{ _(tc["outcome"]) }}</td>
                     <td>{{ format_status_text(tc["text"], _, interface_type=interface_type) }}</td>
                     <td>
-            {% if "time" in tc and tc["time"] is not None %}
+            {% if sample_subtask and "time" in tc and tc["time"] is not None %}
                         {{ _("%(seconds)0.3f s") % {'seconds': tc["time"]} }}
             {% else %}
                         {{ _("N/A") }}
             {% end %}
                     </td>
                     <td>
-            {% if "memory" in tc and tc["memory"] is not None %}
+            {% if sample_subtask and "memory" in tc and tc["memory"] is not None %}
                         {{ format_size(tc["memory"]) }}
             {% else %}
                         {{ _("N/A") }}
             {% end %}
                     </td>
                     <td>{{ idx + 1 }}</td>
-            {% break %}
+            {% if not sample_subtask %}
+                {% break %}
+            {% end %}
         {% else %}
                 <tr class="undefined">
                     <td colspan="5">
