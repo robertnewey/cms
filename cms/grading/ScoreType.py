@@ -589,10 +589,6 @@ class IOIScoreTypeGroup(AIOCScoreTypeGroup):
         <span class="title">
             {{ _("%s") % st["idx"] }}
         </span>
-    {% set sample_subtask = False %}
-    {% if "max_score" in st and st["max_score"] == 0 %}
-        {% set sample_subtask = True %}
-    {% end %}
     {% if "score" in st and "max_score" in st %}
         <span class="score">
             {{ '%g' % round(st["score"], 2) }} / {{ st["max_score"] }}
@@ -615,12 +611,9 @@ class IOIScoreTypeGroup(AIOCScoreTypeGroup):
                 </tr>
             </thead>
             <tbody>
-    {% for idx, tc in enumerate(st["testcases"]) %}
+    {% for tc in st["testcases"] %}
         {% if "outcome" in tc and "text" in tc %}
             {% if tc["outcome"] == "Correct" %}
-                {% if not sample_subtask and idx < len(st["testcases"]) - 1 %}
-                    {% continue %}
-                {% end %}
                 <tr class="correct">
             {% elif tc["outcome"] == "Not correct" %}
                 <tr class="notcorrect">
@@ -630,23 +623,20 @@ class IOIScoreTypeGroup(AIOCScoreTypeGroup):
                     <td>{{ _(tc["outcome"]) }}</td>
                     <td>{{ format_status_text(tc["text"], _, interface_type=interface_type) }}</td>
                     <td>
-            {% if sample_subtask and "time" in tc and tc["time"] is not None %}
+            {% if "time" in tc and tc["time"] is not None %}
                         {{ _("%(seconds)0.3f s") % {'seconds': tc["time"]} }}
             {% else %}
                         {{ _("N/A") }}
             {% end %}
                     </td>
                     <td>
-            {% if sample_subtask and "memory" in tc and tc["memory"] is not None %}
+            {% if "memory" in tc and tc["memory"] is not None %}
                         {{ format_size(tc["memory"]) }}
             {% else %}
                         {{ _("N/A") }}
             {% end %}
                     </td>
-                    <td>{{ idx + 1 }}</td>
-            {% if not sample_subtask %}
-                {% break %}
-            {% end %}
+                    <td>{{ _(tc["testcase_num"]) }}</td>
         {% else %}
                 <tr class="undefined">
                     <td colspan="5">
@@ -661,3 +651,88 @@ class IOIScoreTypeGroup(AIOCScoreTypeGroup):
     </div>
 </div>
 {% end %}"""
+
+    def compute_score(self, submission_result):
+        """See AIOCScoreTypeGroupScoreType.compute_score."""
+        # Actually, this means it didn't even compile!
+        if not submission_result.evaluated():
+            return 0.0, "[]", 0.0, "[]", \
+                json.dumps(["%lg" % 0.0 for _ in self.parameters])
+
+        # Lexicographical order by codename
+        evaluations = dict((ev.codename, ev)
+                           for ev in submission_result.evaluations)
+        subtasks = []
+        public_subtasks = []
+        ranking_details = []
+
+        for st_idx, parameter in enumerate(self.parameters):
+            st_max_score = parameter[1]
+            st_score = self.reduce([float(evaluations[idx].outcome)
+                                    for idx in parameter[2]],
+                                   parameter) * parameter[1]
+            st_public = all(self.public_testcases[idx]
+                            for idx in parameter[2])
+            st_sample = (st_max_score <= 0)
+
+            tc_outcomes = dict((
+                idx,
+                self.get_public_outcome(
+                    float(evaluations[idx].outcome), parameter)
+                ) for idx in parameter[2])
+
+            testcases = []
+            public_testcases = []
+
+            for idx, testcase_id in enumerate(parameter[2]):
+                if (st_sample or idx == len(parameter[2]) - 1 or
+                    tc_outcomes[testcase_id] != "Correct"):
+                    testcase_details = {
+                        "testcase_num": idx + 1,
+                        "idx": testcase_id,
+                        "outcome": tc_outcomes[testcase_id],
+                        "text": evaluations[testcase_id].text,
+                    }
+
+                    if st_sample:
+                        testcase_details.update({
+                            "time": evaluations[testcase_id].execution_time,
+                            "memory": evaluations[testcase_id].execution_memory,
+                            })
+                    testcases.append(testcase_details)
+
+                    if self.public_testcases[testcase_id]:
+                        public_testcases.append(testcases[-1])
+                    else:
+                        public_testcases.append({"idx": testcase_id})
+
+                    if not st_sample:
+                        break
+
+            subtasks.append({
+                "idx": parameter[0],
+                "score": st_score,
+                "max_score": st_max_score,
+                "testcases": testcases,
+                })
+
+            if st_public:
+                public_subtasks.append(subtasks[-1])
+            else:
+                public_subtasks.append({
+                    "idx": parameter[0],
+                    "testcases": public_testcases,
+                    })
+
+            ranking_details.append("%g" % round(st_score, 2))
+
+
+        score = sum(st["score"] for st in subtasks)
+        public_score = sum(st["score"]
+                           for st in public_subtasks
+                           if "score" in st)
+
+        return score, json.dumps(subtasks), \
+            public_score, json.dumps(public_subtasks), \
+            json.dumps(ranking_details)
+
