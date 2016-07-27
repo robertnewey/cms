@@ -265,7 +265,10 @@ class EvaluationJob(Job):
         self.input = input
         self.output = output
         if time_limit is not None:
-            self.time_limit = time_limit * LANGUAGE_TO_TIME_LIMIT_MAP[language]
+            if language in LANGUAGE_TO_TIME_LIMIT_MAP:
+                self.time_limit = time_limit * LANGUAGE_TO_TIME_LIMIT_MAP[language]
+            else:
+                self.time_limit = time_limit
         else:
             self.time_limit = None
         self.memory_limit = memory_limit

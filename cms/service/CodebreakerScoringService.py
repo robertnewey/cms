@@ -133,7 +133,7 @@ class ScoringExecutor(Executor):
 
             # Now that we have the evaluations, we can pass these as parameters
             # to our score type
-            params = [evaluation.outcome for evaluation in previous_evaluations]
+            params = [evaluation.outcome for evaluation in filter(lambda x: x is not None, previous_evaluations)]
 
             # Instantiate the score type.
             # We don't want to use the dataset since we have to pass in custom
