@@ -141,6 +141,7 @@ class Submission(Base):
             dataset = self.task.active_dataset
 
         submission_result = self.get_result(dataset)
+        self.sa_session.commit()
 
         if submission_result is None:
             submission_result = SubmissionResult(submission=self,
