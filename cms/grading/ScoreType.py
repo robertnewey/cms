@@ -493,8 +493,7 @@ uwotm8
                 <tr class="partiallycorrect">
             {% end %}
                     <td class="idx">{{ idxx }}</td>
-                    <td class="outcome">{{ _(tc["outcome"]) }}
-            ({{ '%g' % round(tc["score"], 2) }} / {{ st["max_score"] }})</td>
+                    <td class="outcome">{{ _(tc["outcome"]) }}</td>
                     <td class="details">
                       {{ format_status_text(tc["text"], _) }}
                     </td>
