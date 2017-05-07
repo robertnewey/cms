@@ -438,8 +438,11 @@ class IOIScoreTypeGroup(ScoreTypeGroup):
 {% from cms.grading import format_status_text %}
 {% from cms.server import format_size %}
 {% set idx = 0 %}
+{% set sub_idx = 0 %}
 {% for st in details %}
     {% if "score" in st and "max_score" in st %}
+        {% set sub_idx = sub_idx + (st["max_score"] != 0) %}
+        {% set sampletask = (st["max_score"] == 0) %}
         {% if st["score"] >= st["max_score"] %}
 <div class="subtask correct">
         {% elif st["score"] <= 0.0 %}
@@ -452,7 +455,11 @@ class IOIScoreTypeGroup(ScoreTypeGroup):
     {% end %}
     <div class="subtask-head">
         <span class="title">
-            {{ _("Subtask %d") % st["idx"] }}
+            {% if sampletask %}
+		Sample Data
+            {% else %}
+		{{ _("Subtask %d") % sub_idx }}
+            {% end %}
         </span>
     {% if "score" in st and "max_score" in st %}
         <span class="score">
@@ -481,7 +488,9 @@ class IOIScoreTypeGroup(ScoreTypeGroup):
         {% set idx = idx + 1 %}
         {% set tcs = tcs + [(tc["score"], idx, tc)] %}
     {% end %}
-    {% set tcs = sorted(tcs)[:1] %}
+    {% if st["max_score"] != 0 %}
+        {% set tcs = sorted(tcs)[:1] %}
+    {% end %}
     {% for sc, idxx, tc in tcs %}
         {% if "outcome" in tc and "text" in tc %}
             {% if tc["outcome"] == "Correct" %}
