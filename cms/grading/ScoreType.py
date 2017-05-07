@@ -438,7 +438,6 @@ class IOIScoreTypeGroup(ScoreTypeGroup):
 {% from cms.grading import format_status_text %}
 {% from cms.server import format_size %}
 {% set idx = 0 %}
-uwotm8
 {% for st in details %}
     {% if "score" in st and "max_score" in st %}
         {% if st["score"] >= st["max_score"] %}
