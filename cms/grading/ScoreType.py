@@ -443,9 +443,10 @@ class IOIScoreTypeGroup(ScoreTypeGroup):
     {% if "score" in st and "max_score" in st %}
         {% set sub_idx = sub_idx + (st["max_score"] != 0) %}
         {% set sampletask = (st["max_score"] == 0) %}
-        {% if st["score"] >= st["max_score"] %}
+        {% set stscores = [tc["score"] for tc in st["testcases"]] %}
+        {% if (st["score"] >= st["max_score"] and not sampletask) or (sampletask and min(stscores) >= 1.0) %}
 <div class="subtask correct">
-        {% elif st["score"] <= 0.0 %}
+        {% elif (st["score"] <= 0.0 and not sampletask) or (sampletask and min(stscores) <= 0) %}
 <div class="subtask notcorrect">
         {% else %}
 <div class="subtask partiallycorrect">
@@ -564,7 +565,7 @@ class IOIScoreTypeGroup(ScoreTypeGroup):
             for idx in target:
                 sc = evaluations[idx].outcome
                 try:
-                    sc = float(sc) * parameter[0]
+                    sc = float(sc)
                 except:
                     sc = 0.0
 
