@@ -686,7 +686,7 @@ class IOIScoreTypeGroup(AIOCScoreTypeGroup):
 
             for idx, testcase_id in enumerate(parameter[2]):
                 if (st_sample or idx == len(parameter[2]) - 1 or
-                    tc_outcomes[testcase_id] != "Correct"):
+                    abs(float(evaluations[testcase_id].outcome) - st_score) < 1e-6):
                     testcase_details = {
                         "testcase_num": idx + 1,
                         "idx": testcase_id,
