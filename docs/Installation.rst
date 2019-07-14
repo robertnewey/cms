@@ -54,7 +54,7 @@ On Ubuntu 18.04, one will need to run the following script to satisfy all depend
 .. sourcecode:: bash
 
     # Feel free to change OpenJDK packages with your preferred JDK.
-    sudo apt-get install build-essential openjdk-8-jdk-headless fp-compiler \
+    sudo apt-get install build-essential openjdk-11-jdk-headless fp-compiler \
         postgresql postgresql-client python3.6 cppreference-doc-en-html \
         cgroup-lite libcap-dev zip
 
