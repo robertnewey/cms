@@ -495,8 +495,12 @@ td.token_rules p:last-child {
     width: 20%;
 }
 
+#submission_list colgroup col.language {
+    width: 1%;
+}
+
 #submission_list colgroup col.files {
-    width: 10%;
+    width: 1%;
 }
 
 #submission_list colgroup col.token {
@@ -516,6 +520,10 @@ td.token_rules p:last-child {
 #submission_list tbody tr td.status .details {
     float: right;
     cursor: pointer;
+}
+
+#submission_list tbody tr td.language {
+    white-space: nowrap;
 }
 
 #submission_list tbody tr td.files,
