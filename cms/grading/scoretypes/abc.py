@@ -227,7 +227,11 @@ class ScoreTypeGroup(ScoreTypeAlone):
     {% endif %}
     <div class="subtask-head">
         <span class="title">
+    {% if "alt_title" in st %}
+            {{ st["alt_title"] }}
+    {% else %}
             {% trans index=st["idx"] %}Subtask {{ index }}{% endtrans %}
+    {% endif %}
         </span>
     {% if "score_fraction" in st and "max_score" in st %}
         {% set score = st["score_fraction"] * st["max_score"] %}
@@ -429,14 +433,18 @@ class ScoreTypeGroup(ScoreTypeAlone):
             st_score = st_score_fraction * parameter[0]
 
             score += st_score
-            subtasks.append({
+            subtask_dict = {
                 "idx": st_idx + 1,
                 # We store the fraction so that an "example" testcase
                 # with a max score of zero is still properly rendered as
                 # correct or incorrect.
                 "score_fraction": st_score_fraction,
                 "max_score": parameter[0],
-                "testcases": testcases})
+                "testcases": testcases
+            }
+            if len(parameter) >= 3:
+                subtask_dict["alt_title"] = parameter[-1]
+            subtasks.append(subtask_dict)
             if all(self.public_testcases[tc_idx] for tc_idx in target):
                 public_score += st_score
                 public_subtasks.append(subtasks[-1])

@@ -42,6 +42,77 @@ class GroupMin(ScoreTypeGroup):
 
     """
 
+    def compute_score(self, submission_result):
+        """See ScoreType.compute_score."""
+        # Actually, this means it didn't even compile!
+        if not submission_result.evaluated():
+            return 0.0, [], 0.0, [], ["%lg" % 0.0 for _ in self.parameters]
+
+        score = 0
+        subtasks = []
+        public_score = 0
+        public_subtasks = []
+        ranking_details = []
+
+        targets = self.retrieve_target_testcases()
+        evaluations = {ev.codename: ev for ev in submission_result.evaluations}
+
+        for st_idx, parameter in enumerate(self.parameters):
+            target = targets[st_idx]
+
+            testcases = []
+            public_testcases = []
+            previous_tc_all_correct = True
+            worst_outcome = min([float(evaluations[tc_idx].outcome) for tc_idx in target])
+            for tc_idx in target:
+                tc_outcome = self.get_public_outcome(
+                    float(evaluations[tc_idx].outcome), parameter)
+
+                testcases.append({
+                    "idx": tc_idx,
+                    "outcome": tc_outcome,
+                    "text": evaluations[tc_idx].text,
+                    "time": evaluations[tc_idx].execution_time,
+                    "memory": evaluations[tc_idx].execution_memory,
+                    "show_in_restricted_feedback": previous_tc_all_correct})
+                if self.public_testcases[tc_idx]:
+                    public_testcases.append(testcases[-1])
+                    # Only block restricted feedback if this is the first
+                    # *public* non-correct testcase, otherwise we might be
+                    # leaking info on private testcases.
+                    if float(evaluations[tc_idx].outcome) <= worst_outcome:
+                        previous_tc_all_correct = False
+                else:
+                    public_testcases.append({"idx": tc_idx})
+
+            st_score_fraction = self.reduce(
+                [float(evaluations[tc_idx].outcome) for tc_idx in target],
+                parameter)
+            st_score = st_score_fraction * parameter[0]
+
+            score += st_score
+            subtask_dict = {
+                "idx": st_idx + 1,
+                # We store the fraction so that an "example" testcase
+                # with a max score of zero is still properly rendered as
+                # correct or incorrect.
+                "score_fraction": st_score_fraction,
+                "max_score": parameter[0],
+                "testcases": testcases
+            }
+            if len(parameter) >= 3:
+                subtask_dict["alt_title"] = parameter[-1]
+            subtasks.append(subtask_dict)
+            if all(self.public_testcases[tc_idx] for tc_idx in target):
+                public_score += st_score
+                public_subtasks.append(subtasks[-1])
+            else:
+                public_subtasks.append({"idx": st_idx + 1,
+                                        "testcases": public_testcases})
+            ranking_details.append("%g" % round(st_score, 2))
+
+        return score, subtasks, public_score, public_subtasks, ranking_details
+
     def get_public_outcome(self, outcome, unused_parameter):
         """See ScoreTypeGroup."""
         if outcome <= 0.0:
