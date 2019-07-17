@@ -142,6 +142,20 @@ class Batch(TaskType):
         if len(self.output_filename) == 0:
             self._actual_output = self.DEFAULT_OUTPUT_FILENAME
 
+    def get_input_filename(self):
+        """Returns the name of the input file.
+        return (str): the name
+        
+        """
+        return self.parameters[1][0]
+
+    def get_output_filename(self):
+        """Returns the name of the output file.
+        return (str): the name
+        
+        """
+        return self.parameters[1][1]
+
     def get_compilation_commands(self, submission_format):
         """See TaskType.get_compilation_commands."""
         codenames_to_compile = []
