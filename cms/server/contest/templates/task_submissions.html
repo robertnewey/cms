@@ -166,7 +166,7 @@ $(document).ready(function () {
          class="{{ "span6" if two_task_scores else "span12" }} well well-small task_score {{ get_score_class(public_score, score_type.max_public_score, task.score_precision) }}">
         <span>
         {% if score_type.max_public_score == score_type.max_score %}
-            {% trans %}Score:{% endtrans %}
+            {% trans %}Your current score for this task:{% endtrans %}
         {% else %}
             {% trans %}Public score:{% endtrans %}
         {% endif %}
