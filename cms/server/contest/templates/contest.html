@@ -177,9 +177,11 @@ $(document).ready(function () {
                             <li class="nav-header">
                                 {{ t_iter.name }}
                             </li>
+                            {#
                             <li{% if page == "task_description" and task == t_iter %} class="active"{% endif %}>
                                 <a href="{{ contest_url("tasks", t_iter.name, "description") }}">{% trans %}Statement{% endtrans %}</a>
                             </li>
+                            #}
                             <li{% if page == "task_submissions" and task == t_iter %} class="active"{% endif %}>
                                 <a href="{{ contest_url("tasks", t_iter.name, "submissions") }}">{% trans %}Submissions{% endtrans %}</a>
                             </li>
