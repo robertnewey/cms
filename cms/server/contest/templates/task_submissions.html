@@ -8,7 +8,8 @@
 
 {% block additional_js %}
 
-$(document).on("click", "#submission_list tbody tr td.status .details", function (event) {
+//$(document).on("click", "#submission_list tbody tr td.status .details", function (event) {
+$(document).on("click", "#submission_list tbody tr td.files .details", function (event) {
     var submission_id = $(this).parent().parent().attr("data-submission");
     var modal = $("#submission_detail");
     var modal_body = modal.children(".modal-body");
@@ -349,7 +350,8 @@ $(document).ready(function () {
         {% set num_cols = num_cols + 2 %}
     {% else %}
         <col class="total_score"/>
-        {% set num_cols = num_cols + 1 %}
+        <col class="total_score"/>
+        {% set num_cols = num_cols + 2 %}
     {% endif %}
 {% endif %}
 {% if actual_phase >= +3 %}
@@ -379,6 +381,7 @@ $(document).ready(function () {
             <th class="total_score">{% trans %}Total score{% endtrans %}</th>
     {% else %}
             <th class="total_score">{% trans %}Score{% endtrans %}</th>
+            <th class="total_score">{% trans %}Why?{% endtrans %}</th>
     {% endif %}
 {% endif %}
 {% if actual_phase >= +3 %}

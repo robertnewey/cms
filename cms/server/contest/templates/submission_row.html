@@ -20,13 +20,16 @@
       <img class="details" src="{{ url("static", "loading.gif") }}" />
 {% elif status == SubmissionResult.SCORED %}
         {% trans %}Evaluated{% endtrans %}
-        <a class="details">{% trans %}details{% endtrans %}</a>
+        {#<a class="details">{% trans %}details{% endtrans %}</a>#}
 {% endif %}
     </td>
 {% if score_type is defined and score_type.max_public_score > 0 %}
     {% if status == SubmissionResult.SCORED %}
     <td class="public_score {{ get_score_class(sr.public_score, score_type.max_public_score, task.score_precision) }}">
         {{ score_type.format_score(sr.public_score, score_type.max_public_score, sr.public_score_details, task.score_precision, translation=translation) }}
+    </td>
+    <td class="files">
+        <a class="details btn btn-info">{% trans %}See why{% endtrans %}</a>
     </td>
     {% else %}
     <td class="public_score undefined">

@@ -492,7 +492,7 @@ td.token_rules p:last-child {
 }
 
 #submission_list colgroup col.total_score {
-    width: 20%;
+    width: 15%;
 }
 
 #submission_list colgroup col.language {
@@ -520,6 +520,12 @@ td.token_rules p:last-child {
 #submission_list tbody tr td.status .details {
     float: right;
     cursor: pointer;
+}
+
+#submission_list tbody tr td.public_score .details {
+    float: right;
+    cursor: pointer;
+    vertical-align: top;
 }
 
 #submission_list tbody tr td.language {
