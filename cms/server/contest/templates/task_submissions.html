@@ -8,8 +8,9 @@
 
 {% block additional_js %}
 
+// Load details tab.
 //$(document).on("click", "#submission_list tbody tr td.status .details", function (event) {
-$(document).on("click", "#submission_list tbody tr td.files .details", function (event) {
+$(document).on("click", "#submission_list tbody tr td.why .details", function (event) {
     var submission_id = $(this).parent().parent().attr("data-submission");
     var modal = $("#submission_detail");
     var modal_body = modal.children(".modal-body");
@@ -96,8 +97,10 @@ update_scores = function (submission_id, data) {
         row.children("td.status").append(
             $("<img class=\"details\" src=\"{{ url("static", "loading.gif") }}\"/>"));
     } else {
-        row.children("td.status").append(
-            $("<a class=\"details\">{% trans %}details{% endtrans %}</a>"));
+        //row.children("td.status").append(
+        //    $("<a class=\"details\">{% trans %}details{% endtrans %}</a>"));
+        row.children("td.why").html(
+            $("<a class=\"details btn btn-info\">{% trans %}Score details{% endtrans %}</a>"));
     }
     if (terminal_status) {
         update_score(

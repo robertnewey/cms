@@ -533,11 +533,13 @@ td.token_rules p:last-child {
 }
 
 #submission_list tbody tr td.files,
+#submission_list tbody tr td.why,
 #submission_list tbody tr td.token {
     padding: 3px;
 }
 
 #submission_list tbody tr td.files .btn,
+#submission_list tbody tr td.why .btn,
 #submission_list tbody tr td.token .btn {
     -moz-box-sizing: border-box;
     box-sizing: border-box;
@@ -549,7 +551,12 @@ td.token_rules p:last-child {
     display: inline;
 }
 
-#submission_list td.public_score.undefined {
+#submission_list td.public_score.undefined,
+#submission_list td.why.undefined {
+    color: #AAA;
+}
+
+#submission_list td.why.undefined {
     color: #AAA;
 }
 
