@@ -533,7 +533,7 @@ td.token_rules p:last-child {
 }
 
 #submission_list tbody tr td.files,
-#submission_list tbody tr td.why,
+#submission_list tbody tr td.why.defined,
 #submission_list tbody tr td.token {
     padding: 3px;
 }
