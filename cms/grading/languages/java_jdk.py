@@ -52,7 +52,7 @@ class JavaJDK(Language):
     @property
     def name(self):
         """See Language.name."""
-        return "Java / JDK"
+        return "Java 11 / OpenJDK"
 
     @property
     def source_extensions(self):
