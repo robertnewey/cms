@@ -11,7 +11,7 @@
       <img class="details" src="{{ url("static", "loading.gif") }}" />
 {% elif status == SubmissionResult.COMPILATION_FAILED %}
         {% trans %}Compilation failed{% endtrans %}
-        <a class="details">{% trans %}details{% endtrans %}</a>
+        {#<a class="details">{% trans %}details{% endtrans %}</a>#}
 {% elif status == SubmissionResult.EVALUATING %}
         {% trans %}Evaluating...{% endtrans %}
       <img class="details" src="{{ url("static", "loading.gif") }}" />
@@ -35,9 +35,15 @@
     <td class="public_score undefined">
         {% trans %}N/A{% endtrans %}
     </td>
-    <td class="why undefined">
-        {% trans %}N/A{% endtrans %}
-    </td>
+        {% if status == SubmissionResult.COMPILATION_FAILED %}
+            <td class="why defined">
+                <a class="details btn btn-info">{% trans %}Score details{% endtrans %}</a>
+            </td>
+        {% else %}
+            <td class="why undefined">
+                {% trans %}N/A{% endtrans %}
+            </td>
+        {% endif %}
     {% endif %}
 {% endif %}
 {% if score_type is defined and score_type.max_public_score < score_type.max_score %}
