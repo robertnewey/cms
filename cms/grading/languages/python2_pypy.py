@@ -61,8 +61,9 @@ class Python2PyPy(CompiledLanguage):
 
         commands = []
         files_to_package = []
-        commands.append(["/usr/bin/pypy", "-m", "compileall", "."])
         for idx, source_filename in enumerate(source_filenames):
+            commands.append(["/usr/bin/pypy", "-m", "py_compile", source_filename])
+
             basename = os.path.splitext(os.path.basename(source_filename))[0]
             pyc_file_pattern = os.path.join("__pycache__", "%s.pypy*.pyc" % basename)
             # The file with the entry point must be in first position.
