@@ -29,7 +29,7 @@
         {{ score_type.format_score(sr.public_score, score_type.max_public_score, sr.public_score_details, task.score_precision, translation=translation) }}
     </td>
     <td class="why defined">
-        <a class="details btn btn-info">{% trans %}Score details{% endtrans %}</a>
+        <a class="details btn btn-info">{% trans %}View details{% endtrans %}</a>
     </td>
     {% else %}
     <td class="public_score undefined">
@@ -37,7 +37,7 @@
     </td>
         {% if status == SubmissionResult.COMPILATION_FAILED %}
             <td class="why defined">
-                <a class="details btn btn-danger">{% trans %}Compile details{% endtrans %}</a>
+                <a class="details btn btn-danger">{% trans %}View details{% endtrans %}</a>
             </td>
         {% else %}
             <td class="why undefined">

@@ -101,10 +101,10 @@ update_scores = function (submission_id, data) {
         //    $("<a class=\"details\">{% trans %}details{% endtrans %}</a>"));
         if (data["status"] == "{{ SubmissionResult.COMPILATION_FAILED }}") {
             row.children("td.why").removeClass("undefined").addClass("defined").html(
-                $("<a class=\"details btn btn-danger\">{% trans %}Compile details{% endtrans %}</a>"));
+                $("<a class=\"details btn btn-danger\">{% trans %}View details{% endtrans %}</a>"));
         } else {
             row.children("td.why").removeClass("undefined").addClass("defined").html(
-                $("<a class=\"details btn btn-info\">{% trans %}Score details{% endtrans %}</a>"));
+                $("<a class=\"details btn btn-info\">{% trans %}View details{% endtrans %}</a>"));
         }
     }
     if (terminal_status) {
