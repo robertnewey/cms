@@ -99,8 +99,13 @@ update_scores = function (submission_id, data) {
     } else {
         //row.children("td.status").append(
         //    $("<a class=\"details\">{% trans %}details{% endtrans %}</a>"));
-        row.children("td.why").removeClass("undefined").addClass("defined").html(
-            $("<a class=\"details btn btn-info\">{% trans %}Score details{% endtrans %}</a>"));
+        if (data["status"] == "{{ SubmissionResult.COMPILATION_FAILED }}") {
+            row.children("td.why").removeClass("undefined").addClass("defined").html(
+                $("<a class=\"details btn btn-danger\">{% trans %}Compile details{% endtrans %}</a>"));
+        } else {
+            row.children("td.why").removeClass("undefined").addClass("defined").html(
+                $("<a class=\"details btn btn-info\">{% trans %}Score details{% endtrans %}</a>"));
+        }
     }
     if (terminal_status) {
         update_score(
