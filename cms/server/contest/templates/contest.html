@@ -175,15 +175,15 @@ $(document).ready(function () {
     {% if actual_phase == 0 or actual_phase == 3 or participation.unrestricted %}
         {% for t_iter in contest.tasks %}
                             <li class="nav-header">
-                                {{ t_iter.name }}
+                                Problem {{ loop.index }}: {{ t_iter.name }}
                             </li>
-                            {#
                             <li{% if page == "task_description" and task == t_iter %} class="active"{% endif %}>
-                                <a href="{{ contest_url("tasks", t_iter.name, "description") }}">{% trans %}Statement{% endtrans %}</a>
+                                <a href="{{ contest_url("tasks", t_iter.name, "description") }}">{% trans %}Templates
+                                    &amp; Downloads{% endtrans %}</a>
                             </li>
-                            #}
                             <li{% if page == "task_submissions" and task == t_iter %} class="active"{% endif %}>
-                                <a href="{{ contest_url("tasks", t_iter.name, "submissions") }}">{% trans %}Submissions{% endtrans %}</a>
+                                <a href="{{ contest_url("tasks", t_iter.name, "submissions") }}">{% trans %}Submit a
+                                    solution{% endtrans %}</a>
                             </li>
         {% endfor %}
     {% endif %}
