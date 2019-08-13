@@ -48,6 +48,7 @@ class JavaJDK(Language):
     """
 
     USE_JAR = True
+    MAIN_CLASS_NAME = "Solution"
 
     @property
     def name(self):
@@ -69,6 +70,11 @@ class JavaJDK(Language):
                                  for_evaluation=True):
         """See Language.get_compilation_commands."""
         compile_command = ["/usr/bin/javac"] + source_filenames
+        check_class = ["/bin/sh", "-c",
+                " ".join(["/bin/cat", "{}.class".format(JavaJDK.MAIN_CLASS_NAME), "2>1", ">", "/dev/null",
+                    "||", "({} && {})".format(
+                        " ".join([">&2", "/bin/echo", "'No class named Solution'"]),
+                        "exit 1")])]
         # We need to let the shell expand *.class as javac create
         # a class file for each inner class.
         if JavaJDK.USE_JAR:
@@ -76,7 +82,7 @@ class JavaJDK(Language):
                            " ".join(["jar", "cf",
                                      shell_quote(executable_filename),
                                      "*.class"])]
-            return [compile_command, jar_command]
+            return [compile_command, check_class, jar_command]
         else:
             zip_command = ["/bin/sh", "-c",
                            " ".join(["zip", "-r", "-", "*.class", ">",
@@ -88,10 +94,9 @@ class JavaJDK(Language):
         """See Language.get_evaluation_commands."""
         args = args if args is not None else []
         if JavaJDK.USE_JAR:
-            # executable_filename is a jar file, main is the name of
-            # the main java class
+            # executable_filename is a jar file
             return [["/usr/bin/java", "-Deval=true", "-Xmx512M", "-Xss64M",
-                     "-cp", executable_filename, main] + args]
+                     "-cp", executable_filename, JavaJDK.MAIN_CLASS_NAME] + args]
         else:
             unzip_command = ["/usr/bin/unzip", executable_filename]
             command = ["/usr/bin/java", "-Deval=true", "-Xmx512M", "-Xss64M",
