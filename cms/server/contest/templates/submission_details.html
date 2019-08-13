@@ -11,6 +11,10 @@
 <table class="table table-bordered" style="table-layout: fixed;">
     <tbody>
         <tr>
+            <th>{% trans %}Language:{% endtrans %}</th>
+            <td>{{ sr.submission.language }}</td>
+        </tr>
+        <tr>
             <th>{% trans %}Compilation outcome:{% endtrans %}</th>
             <td>{{ sr.compilation_text|format_status_text }}</td>
         </tr>
