@@ -63,6 +63,18 @@ class JobException(Exception):
         return "JobException(\"%s\")" % (repr(self.msg))
 
 
+def get_simple_status_text(status):
+    mapping_startswith = [
+            ("Evaluation didn't produce file", "Output file was not produced. Check you are creating the output file with name given in the problem statement"),
+            ("Execution timed out", "Time limit exceeded. This may be due to an infinite loop / recursion, or your algorithm may be too slow for this subtask"),
+            ("Execution killed", "Program crashed. Possibly due to accessing or requesting invalid memory (e.g. out-of-bounds array access)"),
+            ("Execution failed because the return code was nonzero", "Return code nonzero, possibly due to an exception or error being thrown."),
+    ]
+    for old, new in mapping_startswith:
+        if status.startswith(old):
+            return new
+    return status
+
 def format_status_text(status, translation=DEFAULT_TRANSLATION):
     """Format the given status text in the given locale.
 
@@ -85,8 +97,9 @@ def format_status_text(status, translation=DEFAULT_TRANSLATION):
         if not isinstance(status, list):
             raise TypeError("Invalid type: %r" % type(status))
 
+        plain = get_simple_status_text(status[0])
         # The empty msgid corresponds to the headers of the pofile.
-        text = _(status[0]) if status[0] != '' else ''
+        text = _(plain) if plain != '' else ''
         return text % tuple(status[1:])
     except Exception:
         logger.error("Unexpected error when formatting status "
