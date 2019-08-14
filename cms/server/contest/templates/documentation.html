@@ -11,6 +11,59 @@
 
 <h2>{% trans %}Programming languages and libraries{% endtrans %}</h2>
 
+<div>
+    <p>
+    This is a table of the allowed websites you can use as language references.
+    </p>
+</div>
+
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th style="width: 30%;">{% trans %}Language{% endtrans %}</th>
+      <th>{% trans %}Reference website{% endtrans %}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>C</td>
+      <td><a href="https://en.cppreference.com/w/c">https://en.cppreference.com/w/c</a></td>
+    </tr>
+    <tr>
+      <td>C++</td>
+      <td><a href="https://en.cppreference.com/w/cpp">https://en.cppreference.com/w/cpp</a></td>
+    </tr>
+    <tr>
+      <td>C#</td>
+      <td><a
+          href="https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/">https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/</a></td>
+    </tr>
+    <tr>
+      <td>Pascal</td>
+      <td><a
+          href="https://www.freepascal.org/docs-html/ref/ref.html">https://www.freepascal.org/docs-html/ref/ref.html</a></td>
+    </tr>
+    <tr>
+      <td>Java</td>
+      <td><a
+          href="https://docs.oracle.com/en/java/javase/11/docs/api/index.html">https://docs.oracle.com/en/java/javase/11/docs/api/index.html</a></td>
+    </tr>
+    <tr>
+      <td>PHP</td>
+      <td><a href="https://www.php.net/manual/en/langref.php">https://www.php.net/manual/en/langref.php</a></td>
+    </tr>
+    <tr>
+      <td>Python 2</td>
+      <td><a href="https://docs.python.org/2.7/">https://docs.python.org/2.7/</a></td>
+    </tr>
+    <tr>
+      <td>Python 3</td>
+      <td><a href="https://docs.python.org/3/">https://docs.python.org/3/</a></td>
+    </tr>
+  </tbody>
+</table>
+
+{#
 {% if contest.languages|map("to_language")|map(attribute="source_extensions")|any("contains", ".cpp") %}
 <h3>C++</h3>
 
@@ -22,6 +75,7 @@
 
 <p>{% trans %}The main Java class of the solution should have exactly the same name as the task.{% endtrans %}</p>
 {% endif %}
+#}
 
 
 <h2>{% trans %}Submission details for compilation{% endtrans %}</h2>
