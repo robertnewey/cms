@@ -13,6 +13,7 @@
 </div>
 
 
+{#
 <h2>{% trans %}Statement{% endtrans %}</h2>
 
 {% if task.statements|length == 0 %}
@@ -82,9 +83,10 @@
     </div>
 </div>
 {% endif %}
+#}
 
 
-<h2>{% trans %}Some details{% endtrans %}</h2>
+<h2>{% trans %}Task details{% endtrans %}</h2>
 
 <table class="table table-bordered table-nohover" style="table-layout: fixed">
     <colgroup>
@@ -123,6 +125,7 @@
         </tr>
 {% endif %}
 {% set compilation_commands = task_type.get_compilation_commands(task.submission_format) %}
+{#
 {% if compilation_commands is not none %}
 {% set compilation_commands = compilation_commands|dictselect("in", contest.languages, by="key") %}
 <tr>
@@ -141,6 +144,7 @@
     {% endfor %}
 </tr>
 {% endif %}
+#}
 
 {% if tokens_contest != TOKEN_MODE_DISABLED and tokens_tasks != TOKEN_MODE_DISABLED %}
 <tr>
@@ -177,38 +181,42 @@
 
 
 {% if task.attachments|length > 0 %}
-    <h2>{% trans %}Attachments{% endtrans %}</h2>
-    <div id="attachments">
-        <ul>
-    {% for filename, attachment in task.attachments|dictsort(by="key") %}
-        {% set mime_type = get_mimetype_for_file_name(filename) %}
-        {% if mime_type is not none %}
-            {% set type_name = get_name_for_mimetype(mime_type) %}
-            {% set type_icon = get_icon_for_mimetype(mime_type) %}
-        {% else %}
-            {% set type_name = none %}
-            {% set type_icon = none %}
-        {% endif %}
-        {% set file_size = handler.application.service.file_cacher.get_size(attachment.digest) %}
-            <li>
-                <a href="{{ contest_url("tasks", task.name, "attachments", filename) }}" class="btn">
-            {% if type_icon is not none %}
-                    <img src="{{ url("static", "img", "mimetypes", "%s.png"|format(type_icon)) }}" alt="{{ mime_type }}" />
-            {% else %}
-                    <img src="{{ url("static", "img", "mimetypes", "unknown.png") }}" alt="{% trans %}unknown{% endtrans %}" />
+    {% for group in ["Templates", "Sample Data"] %}
+        <h2>{% trans %}{{ group }}{% endtrans %}</h2>
+        <div class="attachments">
+            <ul>
+        {% for filename, attachment in task.attachments|dictsort(by="key") %}
+            {% if filename.endswith(".txt") is sameas (group == "Sample Data") %}
+                {% set mime_type = get_mimetype_for_file_name(filename) %}
+                {% if mime_type is not none %}
+                    {% set type_name = get_name_for_mimetype(mime_type) %}
+                    {% set type_icon = get_icon_for_mimetype(mime_type) %}
+                {% else %}
+                    {% set type_name = none %}
+                    {% set type_icon = none %}
+                {% endif %}
+                {% set file_size = handler.application.service.file_cacher.get_size(attachment.digest) %}
+                <li>
+                    <a href="{{ contest_url("tasks", task.name, "attachments", filename) }}" class="btn">
+                {% if type_icon is not none %}
+                        <img src="{{ url("static", "img", "mimetypes", "%s.png"|format(type_icon)) }}" alt="{{ mime_type }}" />
+                {% else %}
+                        <img src="{{ url("static", "img", "mimetypes", "unknown.png") }}" alt="{% trans %}unknown{% endtrans %}" />
+                {% endif %}
+                        <span class="first_line">
+                            <span class="name">{{ filename }}</span>
+                            <span class="size">{{ file_size|format_size }}</span>
+                        </span>
+                {% if type_name is not none %}
+                        <span class="type">{{ translation.translate_mimetype(type_name) }}</span>
+                {% endif %}
+                    </a>
+                </li>
             {% endif %}
-                    <span class="first_line">
-                        <span class="name">{{ filename }}</span>
-                        <span class="size">{{ file_size|format_size }}</span>
-                    </span>
-            {% if type_name is not none %}
-                    <span class="type">{{ translation.translate_mimetype(type_name) }}</span>
-            {% endif %}
-                </a>
-            </li>
+        {% endfor %}
+            </ul>
+        </div>
     {% endfor %}
-        </ul>
-    </div>
 {% endif %}
 
 </div>
