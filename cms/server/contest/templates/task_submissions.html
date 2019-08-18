@@ -411,7 +411,8 @@ $(document).ready(function () {
     <tbody>
     {% if submissions|length == 0 %}
         <tr>
-            <td colspan="{{ num_cols }}" class="no_submissions">{% trans %}no submissions yet{% endtrans %}</td>
+            {# +1 to account for language column; a bit of a hack, but keeps formatting nice. #}
+            <td colspan="{{ num_cols + 1 }}" class="no_submissions">{% trans %}no submissions yet{% endtrans %}</td>
         </tr>
     {% else %}
         {% for s in submissions|sort(attribute="timestamp")|reverse %}
