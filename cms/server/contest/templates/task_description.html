@@ -22,7 +22,7 @@
                 <span class="size">{{ file_size|format_size }}</span>
             </span>
             {% if type_name is not none %}
-                <span class="type">{{ translation.translate_mimetype(type_name) }}</span>
+                <span class="type">{{ translation.translate_mimetype(type_name)|replace('Python 3', 'Python 2/3') }}</span>
             {% endif %}
         </a>
     </li>
