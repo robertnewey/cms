@@ -373,7 +373,8 @@ CMS.CWSUtils.filter_languages = function(options, inputs) {
         for (i = 0; i < options.length; i++) {
             if ($(options[i]).attr('disabled') != 'disabled') {
                 options[i].selected = true;
-                break;
+                // Commenting out the break as a hack to prefer Python3 over Python2.
+                //break;
             }
         }
     }
