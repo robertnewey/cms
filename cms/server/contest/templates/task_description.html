@@ -1,5 +1,33 @@
 {% extends "contest.html" %}
 
+{% macro file_plaque(filename, attachment) -%}
+    {% set mime_type = get_mimetype_for_file_name(filename) %}
+    {% if mime_type is not none %}
+        {% set type_name = get_name_for_mimetype(mime_type) %}
+        {% set type_icon = get_icon_for_mimetype(mime_type) %}
+    {% else %}
+        {% set type_name = none %}
+        {% set type_icon = none %}
+    {% endif %}
+    {% set file_size = handler.application.service.file_cacher.get_size(attachment.digest) %}
+    <li>
+        <a href="{{ contest_url("tasks", task.name, "attachments", filename) }}" class="btn">
+            {% if type_icon is not none %}
+                <img src="{{ url("static", "img", "mimetypes", "%s.png"|format(type_icon)) }}" alt="{{ mime_type }}" />
+            {% else %}
+                <img src="{{ url("static", "img", "mimetypes", "unknown.png") }}" alt="{% trans %}unknown{% endtrans %}" />
+            {% endif %}
+            <span class="first_line">
+                <span class="name">{{ filename }}</span>
+                <span class="size">{{ file_size|format_size }}</span>
+            </span>
+            {% if type_name is not none %}
+                <span class="type">{{ translation.translate_mimetype(type_name) }}</span>
+            {% endif %}
+        </a>
+    </li>
+{%- endmacro %}
+
 {% set page = "task_description" %}
 
 {% block core %}
@@ -181,42 +209,36 @@
 
 
 {% if task.attachments|length > 0 %}
-    {% for group in ["Templates", "Sample Data"] %}
-        <h2>{% trans %}{{ group }}{% endtrans %}</h2>
+    {# Templates #}
+    <h2>{% trans %}Templates{% endtrans %}</h2>
+
+    {% for platform in ["Windows", "Unix (Mac / Linux)"] %}
+        <h3>{% trans %}For {{ platform }}{% endtrans %}</h3>
         <div class="attachments">
             <ul>
-        {% for filename, attachment in task.attachments|dictsort(by="key") %}
-            {% if filename.endswith(".txt") is sameas (group == "Sample Data") %}
-                {% set mime_type = get_mimetype_for_file_name(filename) %}
-                {% if mime_type is not none %}
-                    {% set type_name = get_name_for_mimetype(mime_type) %}
-                    {% set type_icon = get_icon_for_mimetype(mime_type) %}
-                {% else %}
-                    {% set type_name = none %}
-                    {% set type_icon = none %}
+            {% for filename, attachment in task.attachments|dictsort(by="key") %}
+                {% if not filename.endswith(".txt") %}
+                    {% if filename.startswith("windows") is sameas (platform == "Windows") %}
+                        {{ file_plaque(filename, attachment) }}
+                    {% endif %}
                 {% endif %}
-                {% set file_size = handler.application.service.file_cacher.get_size(attachment.digest) %}
-                <li>
-                    <a href="{{ contest_url("tasks", task.name, "attachments", filename) }}" class="btn">
-                {% if type_icon is not none %}
-                        <img src="{{ url("static", "img", "mimetypes", "%s.png"|format(type_icon)) }}" alt="{{ mime_type }}" />
-                {% else %}
-                        <img src="{{ url("static", "img", "mimetypes", "unknown.png") }}" alt="{% trans %}unknown{% endtrans %}" />
-                {% endif %}
-                        <span class="first_line">
-                            <span class="name">{{ filename }}</span>
-                            <span class="size">{{ file_size|format_size }}</span>
-                        </span>
-                {% if type_name is not none %}
-                        <span class="type">{{ translation.translate_mimetype(type_name) }}</span>
-                {% endif %}
-                    </a>
-                </li>
-            {% endif %}
-        {% endfor %}
+            {% endfor %}
             </ul>
         </div>
     {% endfor %}
+
+    {# Sample Data #}
+    <h2>{% trans %}Sample Data{% endtrans %}</h2>
+
+    <div class="attachments">
+        <ul>
+        {% for filename, attachment in task.attachments|dictsort(by="key") %}
+            {% if filename.endswith(".txt") %}
+                {{ file_plaque(filename, attachment) }}
+            {% endif %}
+        {% endfor %}
+        </ul>
+    </div>
 {% endif %}
 
 </div>
