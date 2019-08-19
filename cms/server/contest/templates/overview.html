@@ -178,28 +178,56 @@
 
 
 {% if actual_phase == 0 or actual_phase == 3%}
-<h2>{% trans %}Contest paper / Task statements{% endtrans %}</h2>
+{% set division = user.email %}
 
-<div>
-    <p>
-    Download the entire contest paper by clicking the button below. This contains the statements for <b>all tasks (problems)</b> for this
-    contest.
-    </p>
+{% if division in ["Intermediate", "Senior"] %}
+    <h2>{% trans %}Your division: {{ division }}{% endtrans %}</h2>
 
-    {# This works if we only upload one statement to one problem, and have no statements for the other problems. #}
-{% for t_iter in contest.tasks %}
-    {% if t_iter.statements|length == 1 %}
-        <div class="row statement one_statement">
-            <div class="span9">
-                {% for lang_code in t_iter.statements %}
-                    <a href="{{ contest_url("tasks", t_iter.name, "statements", lang_code) }}" class="btn btn-large
-                        btn-success">{% trans %}Download contest paper{% endtrans %}</a>
-                {% endfor %}
+    <h3>Check this before you proceed...</h3> 
+    <div>
+        You are registered in the <strong>{{ division }}</strong> division.
+        <ul>
+            <li>The Intermediate Division is for students up to, and including Year 10 (or equivalent).</li>
+            <li>The Senior Division is for students in Years 11 or 12 (or equivalent), or younger students looking to
+                challenge themselves.</li>
+        </ul>
+
+        <h4>
+            If you are not registered in the correct division, please let us (using the "Ask a question / messages" page) and your
+            teacher know <b>IMMEDIATELY</b>, and <b>DO NOT PROCEED</b>.
+        </h4>
+    </div>
+
+    <h2>{% trans %}Contest paper / Task statements{% endtrans %}</h2>
+
+    <div>
+        <p>
+        Download the entire contest paper by clicking the button below. This contains the statements for <b>all tasks (problems)</b> for this
+        contest.
+        </p>
+
+        {# This works if we only upload one statement to one problem, and have no statements for the other problems. #}
+    {% for t_iter in contest.tasks %}
+        {% if t_iter.statements|length == 1 %}
+            <div class="row statement one_statement">
+                <div class="span9">
+                    {% for lang_code in t_iter.statements %}
+                        <a href="{{ contest_url("tasks", t_iter.name, "statements", lang_code) }}" class="btn btn-large
+                            btn-success">{% trans %}Download contest paper{% endtrans %}</a>
+                    {% endfor %}
+                </div>
             </div>
-        </div>
-    {% endif %}
-{% endfor %}
-</div>
+        {% endif %}
+    {% endfor %}
+    </div>
+{% else %}
+    <h2>{% trans %}Your are not registered in any division!{% endtrans %}</h2>
+
+    <h4>
+        Please let us (using the "Ask a question / messages" page) and your
+        teacher know <b>IMMEDIATELY</b>.
+    </h4>
+{% endif %}
 
 <h2>{% trans %}Task overview{% endtrans %}</h2>
 
