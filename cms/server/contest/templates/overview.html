@@ -207,14 +207,15 @@
         </p>
 
         {# This works if we only upload one statement to one problem, and have no statements for the other problems. #}
+    {% set lang_code = division|lower %}
     {% for t_iter in contest.tasks %}
-        {% if t_iter.statements|length == 1 %}
+        {% if lang_code in t_iter.statements %}
             <div class="row statement one_statement">
                 <div class="span9">
-                    {% for lang_code in t_iter.statements %}
+                    {#{% for lang_code in t_iter.statements %}#}
                         <a href="{{ contest_url("tasks", t_iter.name, "statements", lang_code) }}" class="btn btn-large
                             btn-success">{% trans %}Download contest paper{% endtrans %}</a>
-                    {% endfor %}
+                    {#{% endfor %}#}
                 </div>
             </div>
         {% endif %}
