@@ -65,10 +65,15 @@ class JobException(Exception):
 
 def get_simple_status_text(status):
     mapping_startswith = [
-            ("Evaluation didn't produce file", "Output file was not produced. Check you are creating the output file with name given in the problem statement"),
-            ("Execution timed out", "Time limit exceeded. This may be due to an infinite loop / recursion, or your algorithm may be too slow for this subtask"),
-            ("Execution killed", "Program crashed. Possibly due to accessing or requesting invalid memory (e.g. out-of-bounds array access)"),
-            ("Execution failed because the return code was nonzero", "Return code nonzero, possibly due to an exception or error being thrown."),
+            ("Evaluation didn't produce file", "Output file was not produced. Check you are creating the output file "
+                "with name given in the problem statement. You may wish to use or consult the templates for this problem."),
+            ("Execution timed out", "Time limit exceeded before your program finished. "
+            "This may be due to an infinite loop/recursion, or your "
+            "algorithm may be too slow for this subtask"),
+            ("Execution killed", "Program crashed. Possibly due to accessing or requesting invalid memory "
+            "(e.g. out-of-bounds array access)"),
+            ("Execution failed because the return code was nonzero", "Your program did not finish successfully "
+            "(return code nonzero). Possibly due to an Exception or Error being thrown."),
     ]
     for old, new in mapping_startswith:
         if status.startswith(old):

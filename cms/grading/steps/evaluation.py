@@ -60,7 +60,7 @@ EVALUATION_MESSAGES = MessageCollection([
                  N_("Your submission ran and gave the partially correct "
                     "answer")),
     HumanMessage("wrong",
-                 N_("Output isn't correct"),
+                 N_("Output isn't correct, or writing to the wrong output file."),
                  N_("Your submission ran, but gave the wrong answer")),
     HumanMessage("nooutput",
                  N_("Evaluation didn't produce file %s"),
