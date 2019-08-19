@@ -6,7 +6,21 @@
 <div class="span9">
 
 <div class="page-header">
-    <h1>{% trans %}Documentation{% endtrans %}</h1>
+    <h1>{% trans %}Rules &amp; Documentation{% endtrans %}</h1>
+</div>
+
+<h2>{% trans %}Contest rules / Why did I score zero?{% endtrans %}</h2>
+
+<div>
+    <p>
+    You can download a copy of the contest rules below. You may wish to refer to these before, during or after the contest,
+    or for possible reasons why a submission of yours did not achieve the result you expected.
+    </p>
+
+    <div>
+    <a href="{{ url("static", "img", "rules.pdf") }}" class="btn btn-large
+    btn-info">{% trans %}Download contest rules{% endtrans %}</a>
+    </div>
 </div>
 
 <h2>{% trans %}Programming languages and libraries{% endtrans %}</h2>
@@ -63,6 +77,13 @@
   </tbody>
 </table>
 
+<h2>{% trans %}Submission details explanations{% endtrans %}</h2>
+
+<p>
+This year, we have updated the submission details messages to be self-contained.
+If you require further explanation on what a message might mean, please consult the "Why Did I Score Zero?" section
+in the rules above, or use the "Ask a question / messages" page to contact the judges.
+</p>
 {#
 {% if contest.languages|map("to_language")|map(attribute="source_extensions")|any("contains", ".cpp") %}
 <h3>C++</h3>
@@ -77,7 +98,7 @@
 {% endif %}
 #}
 
-
+{#
 <h2>{% trans %}Submission details for compilation{% endtrans %}</h2>
 
 <table class="table table-bordered">
@@ -115,6 +136,7 @@
     {% endfor %}
   </tbody>
 </table>
+#}
 
 </div>
 {% endblock core %}
