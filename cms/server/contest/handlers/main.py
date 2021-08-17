@@ -116,7 +116,13 @@ class LoginHandler(ContestHandler):
         if participation is None:
             self.redirect(error_page)
         else:
-            self.redirect(next_page)
+            if len(participation.user.email.split(':')) <= 1:
+                # If they haven't filled in their details
+                # (which are stored as colon delimited string in
+                # the email field), send them to the page to fill that in
+                self.redirect(self.contest_url("getinfo"))
+            else:
+                self.redirect(next_page)
 
 
 class StartHandler(ContestHandler):
@@ -252,12 +258,14 @@ class GetInfoHandler(ContestHandler):
     @tornado.web.authenticated
     @multi_contest
     def post(self):
-        fullname = self.get_argument("fullname", None)
+        firstname = self.get_argument("firstname", None)
+        lastname = self.get_argument("lastname", None)
         year = self.get_argument("year", None)
         email = self.get_argument("email", None)
 
         # No colons as we use it as a delimeter
-        fullname = fullname.replace(':', '')
+        firstname = firstname.replace(':', '')
+        lastname = lastname.replace(':', '')
         year = year.replace(':', '')
         email = email.replace(':', '')
 
@@ -269,9 +277,15 @@ class GetInfoHandler(ContestHandler):
         # and prepend it so as not to overwrite it.
         division = self.current_user.user.email.split(":")[0]
 
-        combined = ":".join([division, fullname, year, email])
+        combined = ":".join([division, firstname, lastname, year, email])
 
         self.current_user.user.email = combined
+
+        # Save to the first/last name fields as well, so it says
+        # "You are logged in as FirstName LastName (Username)" correctly
+        self.current_user.user.first_name = firstname
+        self.current_user.user.last_name = lastname
+
         self.sql_session.commit()
 
         # Take them back to the main page

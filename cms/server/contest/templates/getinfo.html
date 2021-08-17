@@ -9,8 +9,6 @@
     <h1>Fill in your details</h1>
 </div>
 
-<h2 style="margin-bottom: 10px">Please fill in your details</h2>
-
 <p>
   Please fill in your details below and click "Submit" before beginning the contest.
   You will be taken to the start page. Once on the start page, <b>do not</b> click start
@@ -24,10 +22,17 @@
             {{ xsrf_form_html|safe }}
             <fieldset>
                 <div class="control-group">
-                    <label class="control-label">Full Name:</label>
+                    <label class="control-label">First Name:</label>
                     <div class="controls">
                         <input type="text" class="input-xlarge"
-                               id="fullname" name="fullname"/>
+                               id="firstname" name="firstname"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Last Name:</label>
+                    <div class="controls">
+                        <input type="text" class="input-xlarge"
+                               id="lastname" name="lastname"/>
                     </div>
                 </div>
                 <div class="control-group">
