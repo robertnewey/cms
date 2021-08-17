@@ -241,3 +241,43 @@ class DocumentationHandler(ContestHandler):
                     COMPILATION_MESSAGES=COMPILATION_MESSAGES,
                     EVALUATION_MESSAGES=EVALUATION_MESSAGES,
                     **self.r_params)
+
+
+class GetInfoHandler(ContestHandler):
+    """AIO student details form handler.
+
+       After logging in, contestants are redirected to this form
+       to fill in their details.
+    """
+    @tornado.web.authenticated
+    @multi_contest
+    def post(self):
+        fullname = self.get_argument("fullname", None)
+        year = self.get_argument("year", None)
+        email = self.get_argument("email", None)
+
+        # No colons as we use it as a delimeter
+        fullname = fullname.replace(':', '')
+        year = year.replace(':', '')
+        email = email.replace(':', '')
+
+        # Participations are stored in the database in the email field
+        # in the format
+        # <"Intermediate" or "Senior":<fullname>:<year>:<email>
+
+        # The division is not part of the form, so split that out
+        # and prepend it so as not to overwrite it.
+        division = self.current_user.user.email.split(":")[0]
+
+        combined = ":".join([division, fullname, year, email])
+
+        self.current_user.user.email = combined
+        self.sql_session.commit()
+
+        # Take them back to the main page
+        self.redirect(self.contest_url())
+
+    @tornado.web.authenticated
+    @multi_contest
+    def get(self):
+        self.render("getinfo.html", **self.r_params)

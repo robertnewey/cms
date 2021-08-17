@@ -37,7 +37,8 @@ from .main import \
     StartHandler, \
     NotificationsHandler, \
     PrintingHandler, \
-    DocumentationHandler
+    DocumentationHandler, \
+    GetInfoHandler
 from .task import \
     TaskDescriptionHandler, \
     TaskStatementViewHandler, \
@@ -106,6 +107,9 @@ HANDLERS = [
     # The following prefixes are handled by WSGI middlewares:
     # * /static, defined in cms/io/web_service.py
     # * /stl, defined in cms/server/contest/server.py
+
+    # Added for AIO: collect user details on login screen
+    (r"/getinfo", GetInfoHandler),
 ]
 
 
