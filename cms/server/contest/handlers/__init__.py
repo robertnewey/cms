@@ -38,7 +38,8 @@ from .main import \
     NotificationsHandler, \
     PrintingHandler, \
     DocumentationHandler, \
-    GetInfoHandler
+    GetInfoHandler, \
+    PracticeRegistrationHandler
 from .task import \
     TaskDescriptionHandler, \
     TaskStatementViewHandler, \
@@ -110,6 +111,10 @@ HANDLERS = [
 
     # Added for AIO: collect user details on login screen
     (r"/getinfo", GetInfoHandler),
+    
+    # Added for AIO: allow students to register themselves
+    # for the practice contest only
+    (r"/selfregister", PracticeRegistrationHandler),
 ]
 
 

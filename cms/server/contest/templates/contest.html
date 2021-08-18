@@ -117,6 +117,9 @@ $(document).ready(function () {
                         </div>
                     </fieldset>
                 </form>
+{% if allow_self_rego %}
+		<a href="{{ contest_url("selfregister") }}">Or click here to register</a>
+{% endif %}
             </div>
         </div>
 {% else %}

@@ -42,7 +42,7 @@ import logging
 import tornado.web
 
 from cms import config
-from cms.db import PrintJob
+from cms.db import PrintJob, User, Participation
 from cms.grading.steps import COMPILATION_MESSAGES, EVALUATION_MESSAGES
 from cms.server import multi_contest
 from cms.server.contest.authentication import validate_login
@@ -70,6 +70,15 @@ class MainHandler(ContestHandler):
     """
     @multi_contest
     def get(self):
+        # Allow students to self register
+        # for practice contests
+        # FIXME: Hackily check if "ractice"
+        # (as in "practice") is in the contest
+        # title.
+        if self.contest.description and "ractice" in self.contest.description:
+            self.r_params["allow_self_rego"] = True
+        else:
+            self.r_params["allow_self_rego"] = False
         self.render("overview.html", **self.r_params)
 
 
@@ -123,6 +132,69 @@ class LoginHandler(ContestHandler):
                 self.redirect(self.contest_url("getinfo"))
             else:
                 self.redirect(next_page)
+
+
+class PracticeRegistrationHandler(ContestHandler):
+    """Practice rego handler
+        
+    Allow students to self-register for the practice contest.
+    """
+    def get(self):
+        self.r_params["errors"] = []
+        self.r_params["success"] = False
+        self.render("practicerego.html", **self.r_params)
+
+    def post(self):
+        username = self.get_argument("username", None)
+
+        password = self.get_argument("password", None)
+        password2 = self.get_argument("password2", None)
+        logger.info("Being asked to do a thing for %s %s", username, password)
+
+        errors = []
+
+        # Check they supplied a username and password
+        if not username.isalnum():
+            errors.append("Your username must only contain a-zA-Z0-9")
+        if not username:
+            errors.append("Please supply a username.")
+        if not password or not password2:
+            errors.append("Please supply a password.")
+        if password != password2:
+            errors.append("Please make sure the passwords match.")
+        if errors:
+            # Do not continue if fields did not pass validation
+            pass
+        # Check that registration is allowed
+        elif not self.contest.description or "ractice" not in self.contest.description:
+            errors.append("Self-registration is not allowed.")
+        # Check that the username is unused.
+        elif self.sql_session.query(User).filter(User.username == username).count():
+            errors.append("User already exists. Choose another username.")
+        else:
+            # Create the user, then create the participation object
+            new_user = User(
+                username=username,
+                password="plaintext:"+password,
+                first_name="",
+                last_name="",
+                email="Intermediate")
+
+            self.sql_session.add(new_user)
+
+            new_participation = Participation(
+                #contest_id=self.contest.id,
+                contest=self.contest,
+                #user_id=new_user.id,
+                user=new_user)
+            self.sql_session.add(new_participation)
+
+            self.sql_session.commit()
+
+        self.r_params["success"] = not errors
+        self.r_params["errors"] = errors 
+        self.render("practicerego.html", **self.r_params)
+
 
 
 class StartHandler(ContestHandler):

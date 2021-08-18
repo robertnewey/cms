@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ contest.description }}
+{% endblock title %}
+
+{% block body %}
+        <div id="navigation_bar" class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <a class="brand" href="{{ contest_url() }}">{{ contest.description }}</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="login_container">
+            <div class="login_box hero-unit">
+                <h1>Register</h1>
+                <p>Register for the practice contest below.</p>
+{% if errors %}
+		Please fix:
+		<ul>
+{% for error in errors %}
+		    <li style="color:red;">{{ error }}</li>
+{% endfor %}
+		</ul>
+{% endif %}
+{% if success %}
+		<p style="color:#0b8500">
+		Success! Return to the login page <a href="{{ contest_url() }}">here</a>.
+		</p>
+{% endif %}
+                <form class="form-horizontal" action="{{ contest_url("selfregister") }}" method="POST">
+                    {{ xsrf_form_html|safe }}
+                    <fieldset>
+                        <div class="control-group">
+                            <label class="control-label" for="username">{% trans %}New username{% endtrans %}</label>
+                            <div class="controls">
+                                <input type="text" class="input-xlarge" name="username" id="username">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="password">{% trans %}New password{% endtrans %}</label>
+                            <div class="controls">
+                                <input type="password" class="input-xlarge" name="password" id="password">
+                            </div>
+                        <div class="control-group">
+                            <label class="control-label" for="password2">{% trans %}Confirm new password{% endtrans %}</label>
+                            <div class="controls">
+                                <input type="password" class="input-xlarge" name="password2" id="password2">
+                            </div>
+                        </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="controls">
+                                <button type="submit" class="btn btn-primary btn-large">{% trans %}Register{% endtrans %}</button>
+                                <button type="reset" class="btn btn-large">{% trans %}Reset{% endtrans %}</button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+{% endblock body %}
