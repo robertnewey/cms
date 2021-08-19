@@ -9,18 +9,29 @@
     <h1>{% trans %}Rules &amp; Documentation{% endtrans %}</h1>
 </div>
 
-<h2>{% trans %}Contest rules / Why did I score zero?{% endtrans %}</h2>
+<h2>{% trans %}Contest rules{% endtrans %}</h2>
 
 <div>
     <p>
-    You can download a copy of the contest rules below. You may wish to refer to these before, during or after the contest,
-    or for possible reasons why a submission of yours did not achieve the result you expected.
+      You may access the the AIO website (<a href="https://aio.edu.au">aio.edu.au</a>)
+      to view the following pages:
     </p>
-
-    <div>
-    <a href="{{ url("static", "img", "rules.pdf") }}" class="btn btn-large
-    btn-info">{% trans %}Download contest rules{% endtrans %}</a>
-    </div>
+    <p>
+      Competition rules:
+    </p>
+    <ul>
+      <li><a href="https://aio.edu.au/rules_environment/">Competition Environment</a></li>
+      <li><a href="https://aio.edu.au/rules_format/">Competition Format & Judging</a></li>
+      <li><a href="https://aio.edu.au/rules_technical/">Technical Details</a></li>
+    </ul>
+    <p>
+      Student resources:
+    </p>
+    <ul>
+      <li><a href="https://aio.edu.au/rules_student_guide/">Student's Guide</a></li>
+      <li><a href="https://aio.edu.au/rules_advice/">Judging FAQ</a></li>
+      <li><a href="https://aio.edu.au/rules_zero/">Why Did I Score Zero?</a></li>
+    </ul>
 </div>
 
 <h2>{% trans %}Programming languages and libraries{% endtrans %}</h2>
@@ -47,6 +58,7 @@
       <td>C++</td>
       <td><a href="https://en.cppreference.com/w/cpp">https://en.cppreference.com/w/cpp</a></td>
     </tr>
+{#
     <tr>
       <td>C#</td>
       <td><a
@@ -57,6 +69,7 @@
       <td><a
           href="https://www.freepascal.org/docs-html/ref/ref.html">https://www.freepascal.org/docs-html/ref/ref.html</a></td>
     </tr>
+#}
     <tr>
       <td>Java</td>
       <td><a
@@ -66,10 +79,12 @@
       <td>PHP</td>
       <td><a href="https://www.php.net/manual/en/langref.php">https://www.php.net/manual/en/langref.php</a></td>
     </tr>
+{#
     <tr>
       <td>Python 2</td>
       <td><a href="https://docs.python.org/2.7/">https://docs.python.org/2.7/</a></td>
     </tr>
+#}
     <tr>
       <td>Python 3</td>
       <td><a href="https://docs.python.org/3/">https://docs.python.org/3/</a></td>
