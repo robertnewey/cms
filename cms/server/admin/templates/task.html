@@ -427,7 +427,7 @@ $("select[name=task_type_{{ dataset.id }}]").change(function() {
             <span class="info" title="Please see the score type documentation."></span>
             Score Parameters
           </td>
-          <td><textarea name="score_type_parameters_{{ dataset.id }}">{{ dataset.score_type_parameters|tojson|forceescape }}</textarea></td>
+          <td><textarea name="score_type_parameters_{{ dataset.id }}">{{ dataset.score_type_parameters|tojson(indent=2)|forceescape }}</textarea></td>
         </tr>
       </table>
       <div class="hr"></div>
