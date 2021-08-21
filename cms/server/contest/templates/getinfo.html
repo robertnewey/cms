@@ -15,6 +15,13 @@
   until your teacher has confirmed everyone is ready begin. If you are sitting at home,
   then you may begin whenever you are ready.
 </p>
+{% if form_errors %}
+<ul>
+{% for error in form_errors %}
+    <li style="color: red;">{{ error }}</li>
+{% endfor %}
+</ul>
+{% endif %}
 
 <div id="submit_info" class="row">
     <div class="span5">
@@ -24,35 +31,32 @@
                 <div class="control-group">
                     <label class="control-label">First Name:</label>
                     <div class="controls">
-                        <input type="text" class="input-xlarge"
-                               id="firstname" name="firstname"/>
+			    <input type="text" class="input-xlarge" id="firstname" name="firstname" value="{{ form_firstname }}"/>
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label">Last Name:</label>
                     <div class="controls">
-                        <input type="text" class="input-xlarge"
-                               id="lastname" name="lastname"/>
+                        <input type="text" class="input-xlarge" id="lastname" name="lastname" value="{{ form_lastname }}"/>
                     </div>
                 </div>
                 <div class="control-group">
 		    <label class="control-label">Year:</label>
                     <div class="controls">
                         <select name="year" style="color: #000000">
-                            <option value="7">Year 7 or below</option>
-                            <option value="8">Year 8</option>
-                            <option value="9">Year 9</option>
-                            <option value="10">Year 10</option>
-                            <option value="11">Year 11</option>
-                            <option value="12">Year 12</option>
+			    <option{% if form_year == "7" %} selected{% endif %} value="7">Year 7 or below</option>
+                            <option{% if form_year == "8" %} selected{% endif %} value="8">Year 8</option>
+                            <option{% if form_year == "9" %} selected{% endif %} value="9">Year 9</option>
+                            <option{% if form_year == "10" %} selected{% endif %} value="10">Year 10</option>
+                            <option{% if form_year == "11" %} selected{% endif %} value="11">Year 11</option>
+                            <option{% if form_year == "12" %} selected{% endif %} value="12">Year 12</option>
                         </select>
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label">email:</label>
                     <div class="controls">
-                        <input type="text" class="input-xlarge"
-                               id="email" name="email"/>
+                        <input type="text" class="input-xlarge" id="email" name="email" value="{{ form_email }}"/>
                     </div>
                 </div>
                 <div class="control-group">

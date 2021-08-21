@@ -36,6 +36,7 @@ from future.builtins.disabled import *  # noqa
 from future.builtins import *  # noqa
 
 import ipaddress
+import itertools
 import json
 import logging
 
@@ -351,19 +352,47 @@ class GetInfoHandler(ContestHandler):
 
         combined = ":".join([division, firstname, lastname, year, email])
 
-        self.current_user.user.email = combined
+        # Verify that the fields are acceptable
+        errors = []
+        if firstname == "": errors.append("Please enter a first name")
+        if lastname == "": errors.append("Please enter a last name")
+        if year == "": errors.append("Please enter a year")
+        if email == "": errors.append("Please enter an email")
+        if '@' not in email: errors.append("Please enter a valid email")
 
-        # Save to the first/last name fields as well, so it says
-        # "You are logged in as FirstName LastName (Username)" correctly
-        self.current_user.user.first_name = firstname
-        self.current_user.user.last_name = lastname
+        if errors:
+            logger.info("Received %s errors %s", combined, str(errors))
+            self._return_filled_info_form(combined, errors)
+        else:
+            self.current_user.user.email = combined
 
-        self.sql_session.commit()
+            # Save to the first/last name fields as well, so it says
+            # "You are logged in as FirstName LastName (Username)" correctly
+            self.current_user.user.first_name = firstname
+            self.current_user.user.last_name = lastname
 
-        # Take them back to the main page
-        self.redirect(self.contest_url())
+            self.sql_session.commit()
+
+            # Take them back to the main page
+            self.redirect(self.contest_url())
 
     @tornado.web.authenticated
     @multi_contest
     def get(self):
+        combined =  self.current_user.user.email
+        self._return_filled_info_form(combined, [])
+
+    def _return_filled_info_form(self, combined, errors):
+        combined = combined.split(":")
+        fields = [
+            "form_division", # Not actually used in the form
+            "form_firstname",
+            "form_lastname",
+            "form_year",
+            "form_email"
+        ]
+        for field, value in itertools.zip_longest(fields, combined, fillvalue=""):
+            self.r_params[field] = value
+        self.r_params["form_errors"] = errors
         self.render("getinfo.html", **self.r_params)
+
