@@ -126,7 +126,7 @@ class LoginHandler(ContestHandler):
         if participation is None:
             self.redirect(error_page)
         else:
-            if len(participation.user.email.split(':')) <= 1:
+            if not participation.user.email or len(participation.user.email.split(':')) <= 1:
                 # If they haven't filled in their details
                 # (which are stored as colon delimited string in
                 # the email field), send them to the page to fill that in
@@ -348,7 +348,11 @@ class GetInfoHandler(ContestHandler):
 
         # The division is not part of the form, so split that out
         # and prepend it so as not to overwrite it.
-        division = self.current_user.user.email.split(":")[0]
+        if self.current_user.user.email:
+            division = self.current_user.user.email.split(":")[0]
+        else:
+            # No division set.
+            division = ""
 
         combined = ":".join([division, firstname, lastname, year, email])
 
@@ -383,7 +387,10 @@ class GetInfoHandler(ContestHandler):
         self._return_filled_info_form(combined, [])
 
     def _return_filled_info_form(self, combined, errors):
-        combined = combined.split(":")
+        if combined:
+            combined = combined.split(":")
+        else:
+            combined = []
         fields = [
             "form_division", # Not actually used in the form
             "form_firstname",
