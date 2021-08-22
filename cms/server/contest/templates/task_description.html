@@ -145,11 +145,11 @@
 {% if task_type.name == "Batch" %}
         <tr>
             <th>{% trans %}Input File{% endtrans %}</th>
-            <td colspan="2">{{ task_type.get_input_filename() or "standard input" }}</td>
+	    <td colspan="2"><pre>{{ task_type.get_input_filename() or "standard input" }}</pre></td>
         </tr>
         <tr>
             <th>{% trans %}Output File{% endtrans %}</th>
-            <td colspan="2">{{ task_type.get_output_filename() or "standard output" }}</td>
+	    <td colspan="2"><pre>{{ task_type.get_output_filename() or "standard output" }}</pre></td>
         </tr>
 {% endif %}
 {% set compilation_commands = task_type.get_compilation_commands(task.submission_format) %}
@@ -237,16 +237,21 @@
 
     {# Horrible hack to show in 2 columns so that inputs and outputs line up #}
     {# Only shows samples up to 4 #}
+    {% for platform in ["Windows", "Unix (Mac / Linux)"] %}
+    <h3>{% trans %}For {{ platform }}{% endtrans %}</h3>
     {% for i in range(1, 5) %}
-    <div class="attachments">
-        <ul>
-        {% for filename, attachment in task.attachments|dictsort(by="key") %}
-            {% if filename.endswith(".txt") and i|string in filename %}
-                {{ file_plaque(filename, attachment) }}
-            {% endif %}
-        {% endfor %}
-        </ul>
-    </div>
+        <div class="attachments">
+            <ul>
+            {% for filename, attachment in task.attachments|dictsort(by="key") %}
+                {% if filename.endswith(".txt") and i|string in filename %}
+                    {% if filename.startswith("windows") is sameas (platform == "Windows") %}
+		        {{ file_plaque(filename, attachment) }}
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+            </ul>
+        </div>
+    {% endfor %}
     {% endfor %}
 {% endif %}
 
