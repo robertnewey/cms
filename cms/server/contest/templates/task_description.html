@@ -19,7 +19,7 @@
             {% endif %}
             <span class="first_line">
                 <span class="name">{{ filename }}</span>
-                <span class="size">{{ file_size|format_size }}</span>
+		{#<span class="size">{{ file_size|format_size }}</span>#}
             </span>
             {% if type_name is not none %}
                 <span class="type">{{ translation.translate_mimetype(type_name)|replace('Python 3', 'Python 2/3') }}</span>
@@ -207,7 +207,12 @@
 </table>
 
 
-
+{#
+    For this to work, you should upload attachments named:
+        - linux-<NAME>.<EXT> for Mac / Linux templates. Beginning with "linux" is how the code below works out which section to show it in.
+        - windows-<NAME>.<EXT> for Windows templates. Beginning with "windows" is how the code below works out which section to show it in.
+        - *.txt for the sample cases. They're shown in lexicographical order, so sample1in.txt, sample1out.txt, sample2in.txt... is a sensible naming scheme
+#}
 {% if task.attachments|length > 0 %}
     {# Templates #}
     <h2>{% trans %}Templates{% endtrans %}</h2>
@@ -230,15 +235,19 @@
     {# Sample Data #}
     <h2>{% trans %}Sample Data{% endtrans %}</h2>
 
+    {# Horrible hack to show in 2 columns so that inputs and outputs line up #}
+    {# Only shows samples up to 4 #}
+    {% for i in range(1, 5) %}
     <div class="attachments">
         <ul>
         {% for filename, attachment in task.attachments|dictsort(by="key") %}
-            {% if filename.endswith(".txt") %}
+            {% if filename.endswith(".txt") and i|string in filename %}
                 {{ file_plaque(filename, attachment) }}
             {% endif %}
         {% endfor %}
         </ul>
     </div>
+    {% endfor %}
 {% endif %}
 
 </div>
