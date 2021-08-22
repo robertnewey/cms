@@ -117,7 +117,10 @@ class Batch(TaskType):
         {OUTPUT_EVAL_DIFF: "Outputs compared with white diff",
          OUTPUT_EVAL_CHECKER: "Outputs are compared by a comparator"})
 
-    ACCEPTED_PARAMETERS = [_COMPILATION, _USE_FILE, _EVALUATION]
+    # Added for the AIO to accommodate slow languages like Java, PHP and Python
+    _SLOW_LANGUAGE_TIME_LIMIT =  ParameterTypeString("Slow language time limit", "slowtimelimit", "")
+
+    ACCEPTED_PARAMETERS = [_COMPILATION, _USE_FILE, _EVALUATION, _SLOW_LANGUAGE_TIME_LIMIT]
 
     @property
     def name(self):
@@ -132,6 +135,9 @@ class Batch(TaskType):
         self.compilation = self.parameters[0]
         self.input_filename, self.output_filename = self.parameters[1]
         self.output_eval = self.parameters[2]
+
+        # Separate time limit for slow languages
+        self.slow_language_timelimit = self.parameters[3]
 
         # Actual input and output are the files used to store input and
         # where the output is checked, regardless of using redirects or not.
@@ -310,11 +316,21 @@ class Batch(TaskType):
         for filename, digest in iteritems(files_to_get):
             sandbox.create_file_from_storage(filename, digest)
 
+        # For the AIO, we give Python submissions a laxer timeline
+        selected_timelimit = job.time_limit
+        if "Python" in job.language or "PHP" in job.language or "Java" in job.language:
+            # We used a string parameter because CMS doesn't provide
+            # a float one (it does give an int one though)
+            try:
+                selected_timelimit = float(self.slow_language_timelimit)
+            except ValueError:
+                pass
+
         # Actually performs the execution
         box_success, evaluation_success, stats = evaluation_step(
             sandbox,
             commands,
-            job.time_limit,
+            selected_timelimit,
             job.memory_limit,
             writable_files=files_allowing_write,
             stdin_redirect=stdin_redirect,
