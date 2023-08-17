@@ -333,18 +333,20 @@ class GetInfoHandler(ContestHandler):
     def post(self):
         firstname = self.get_argument("firstname", None)
         lastname = self.get_argument("lastname", None)
+        gender = self.get_argument("gender", None)
         year = self.get_argument("year", None)
         email = self.get_argument("email", None)
 
         # No colons as we use it as a delimeter
         firstname = firstname.replace(':', '')
         lastname = lastname.replace(':', '')
+        gender = gender.replace(':', '')
         year = year.replace(':', '')
         email = email.replace(':', '')
 
         # Participations are stored in the database in the email field
         # in the format
-        # <"Intermediate" or "Senior":<fullname>:<year>:<email>
+        # <"Intermediate" or "Senior":<fullname>:<gender>:<year>:<email>
 
         # The division is not part of the form, so split that out
         # and prepend it so as not to overwrite it.
@@ -354,13 +356,14 @@ class GetInfoHandler(ContestHandler):
             # No division set.
             division = ""
 
-        combined = ":".join([division, firstname, lastname, year, email])
+        combined = ":".join([division, firstname, lastname, gender, year, email])
 
         # Verify that the fields are acceptable
         errors = []
         if firstname == "": errors.append("Please enter a first name")
         if lastname == "": errors.append("Please enter a last name")
-        if year == "": errors.append("Please enter a year")
+        if year == "": errors.append("Please enter a year") # Dropdown, so should not happen
+        if gender == "": errors.append("Please enter gender") # Dropdown, so should not happen
         if email == "": errors.append("Please enter an email")
         if '@' not in email: errors.append("Please enter a valid email")
 
@@ -395,6 +398,7 @@ class GetInfoHandler(ContestHandler):
             "form_division", # Not actually used in the form
             "form_firstname",
             "form_lastname",
+            "form_gender",
             "form_year",
             "form_email"
         ]

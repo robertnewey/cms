@@ -41,6 +41,17 @@
                     </div>
                 </div>
                 <div class="control-group">
+		    <label class="control-label">Gender:</label>
+                    <div class="controls">
+                        <select name="gender" style="color: #000000">
+			    <option{% if form_gender == "X" %} selected{% endif %} value="X">Prefer not to say</option>
+                            <option{% if form_gender == "M" %} selected{% endif %} value="M">Male</option>
+                            <option{% if form_gender == "F" %} selected{% endif %} value="F">Female</option>
+                            <option{% if form_gender == "N" %} selected{% endif %} value="N">Not Listed</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="control-group">
 		    <label class="control-label">Year:</label>
                     <div class="controls">
                         <select name="year" style="color: #000000">
