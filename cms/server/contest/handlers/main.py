@@ -348,13 +348,12 @@ class GetInfoHandler(ContestHandler):
         # in the format
         # <"Intermediate" or "Senior":<fullname>:<gender>:<year>:<email>
 
-        # The division is not part of the form, so split that out
-        # and prepend it so as not to overwrite it.
-        if self.current_user.user.email:
-            division = self.current_user.user.email.split(":")[0]
-        else:
-            # No division set.
-            division = ""
+        division = "Unknown"
+        # The division is not part of the form, it is determined from year level.
+        if year in ["7", "8", "9", "10"]:
+            division = "Intermediate"
+        elif year in ["11", "12"]:
+            division = "Senior"
 
         combined = ":".join([division, firstname, lastname, gender, year, email])
 
