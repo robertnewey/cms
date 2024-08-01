@@ -164,6 +164,7 @@ $(document).ready(function () {
                         <span id="countdown_label"></span>
                         <span id="countdown"></span>
                     </h3>
+                    {% if page != "getinfo" %}
                     <div class="well" style="padding: 8px 0;">
                         <ul class="nav nav-list">
 
@@ -214,6 +215,7 @@ $(document).ready(function () {
                     <a href="http://www.gnu.org/licenses/agpl" rel="license noreferrer" target="_blank">{% trans %}GNU Affero General Public License{% endtrans %}</a>
                     .
                     </span>
+                    {% endif %}
                 </div>
     {% block core %}{% endblock core %}
             </div>

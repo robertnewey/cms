@@ -340,8 +340,10 @@ class GetInfoHandler(ContestHandler):
         # No colons as we use it as a delimeter
         firstname = firstname.replace(':', '')
         lastname = lastname.replace(':', '')
-        gender = gender.replace(':', '')
-        year = year.replace(':', '')
+        if gender: gender = gender.replace(':', '')
+        else: gender = ""
+        if year: year = year.replace(':', '')
+        else: year = ""
         email = email.replace(':', '')
 
         # Participations are stored in the database in the email field
@@ -350,7 +352,7 @@ class GetInfoHandler(ContestHandler):
 
         division = "Unknown"
         # The division is not part of the form, it is determined from year level.
-        if year in ["7", "8", "9", "10"]:
+        if year in ["6", "7", "8", "9", "10"]:
             division = "Intermediate"
         elif year in ["11", "12"]:
             division = "Senior"
@@ -361,8 +363,8 @@ class GetInfoHandler(ContestHandler):
         errors = []
         if firstname == "": errors.append("Please enter a first name")
         if lastname == "": errors.append("Please enter a last name")
-        if year == "": errors.append("Please enter a year") # Dropdown, so should not happen
-        if gender == "": errors.append("Please enter gender") # Dropdown, so should not happen
+        if gender == "": errors.append("Please select your gender")
+        if year == "": errors.append("Please select your year level")
         if email == "": errors.append("Please enter an email")
         if '@' not in email: errors.append("Please enter a valid email")
 
