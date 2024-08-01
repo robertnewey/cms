@@ -140,11 +140,13 @@ class PracticeRegistrationHandler(ContestHandler):
         
     Allow students to self-register for the practice contest.
     """
+    @multi_contest
     def get(self):
         self.r_params["errors"] = []
         self.r_params["success"] = False
         self.render("practicerego.html", **self.r_params)
 
+    @multi_contest
     def post(self):
         username = self.get_argument("username", None)
 
