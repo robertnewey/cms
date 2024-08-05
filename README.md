@@ -87,3 +87,18 @@ find an updated list at <http://cms-dev.github.io/testimonials.html>.
 If you used CMS for a contest, selection, or a similar event, and want
 to publicize this information, we would be more than happy to hear
 from you and add it to that list.
+
+
+python3.10 for judging
+----------------------
+
+For AIO 2024, CMS used python3.10 for judging (to match ORAC) but an older version for everything else. On ubuntu 20.04, python3.10 can be installed using:
+
+```
+sudo apt-get install software-properties-common
+sudo add-apt-repository ppa:deadsnakes/ppa
+sudo apt-get update
+sudo apt-get install python3.10 python3.10-venv
+```
+
+Then cms/grading/languages/python3_cpython.py was updated in two places, replacing /usr/bin/python3 with /usr/bin/python3.10. To revert, change this back.
