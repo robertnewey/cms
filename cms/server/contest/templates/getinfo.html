@@ -9,12 +9,18 @@
     <h1>Fill in your details</h1>
 </div>
 
+{% if "ractice" in contest.description %}
 <p>
-  Please fill in your details below and click "Submit" before beginning the contest.
-  You will be taken to the start page. Once on the start page, <b>do not</b> click start
-  until your teacher has confirmed everyone is ready begin. If you are sitting at home,
-  then you may begin whenever you are ready.
+    Please fill in your details below and click "Submit" to access the practice contest.
 </p>
+{% else %}
+<p>
+    Please fill in your details below and click "Submit" before beginning the contest.
+    You will be taken to the start page. Once on the start page, <b>do not</b> click start
+    until your teacher has confirmed everyone is ready begin.
+</p>
+{% endif %}
+
 {% if form_errors %}
 <ul>
 {% for error in form_errors %}
