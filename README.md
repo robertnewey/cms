@@ -98,7 +98,7 @@ For AIO 2024, CMS used python3.10 for judging (to match ORAC) but an older versi
 sudo apt-get install software-properties-common
 sudo add-apt-repository ppa:deadsnakes/ppa
 sudo apt-get update
-sudo apt-get install python3.10 python3.10-venv
+sudo apt-get install python3.10
 ```
 
 Then cms/grading/languages/python3_cpython.py was updated in two places, replacing /usr/bin/python3 with /usr/bin/python3.10. To revert, change this back.
