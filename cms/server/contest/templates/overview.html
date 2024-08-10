@@ -117,7 +117,27 @@
         </p>
     {% endif %}
 {% endif %}
-
+<h2>{% trans %}Rules{% endtrans %}</h2>
+{% if "ractice" in contest.description %}
+    {% trans %}
+        The rules for the actual competition can be found on the Rules &amp; Documentation page on the sidebar. 
+        Please familiarise yourself with them before the competition day. Notably:
+    {% endtrans %}
+{% else %}
+    {% trans %}
+        If you are unsure about the rules, please refer to the Rules &amp; Documentation page on the sidebar or use the "Ask a question / messages" page to contact the judges.
+        Notably:
+    {% endtrans %}
+{% endif %}
+{% trans %}
+    <ul>
+        <li>You <b>cannot</b> access any websites, other than the competition website and the exemptions listed in the rules.</li>
+        <li>You <b>cannot</b> use any AI tools.</li>
+        <li>You <b>cannot</b> use any pre-written code stored electronically on your computer, except for code that comes installed with your text editor.</li>
+        <li>You <b>must participate individually</b>, without any outside help.</li>
+        <li>You <b>can</b> use books or other written material, including printed source code and handwritten notes.</li>
+    </ul>
+{% endtrans %}
 {% if contest.max_submission_number is not none %}
     <p>
     {% trans submissions=contest.max_submission_number %}You can submit at most {{ submissions }} solutions during this contest.{% endtrans %}
