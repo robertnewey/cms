@@ -51,7 +51,7 @@ from cms.server.contest.communication import get_communications
 from cms.server.contest.printing import accept_print_job, PrintingDisabled, \
     UnacceptablePrintJob
 from cmscommon.datetime import make_datetime, make_timestamp
-
+from cmscommon.crypto import hash_password
 from ..phase_management import actual_phase_required
 
 from .contest import ContestHandler
@@ -152,7 +152,7 @@ class PracticeRegistrationHandler(ContestHandler):
 
         password = self.get_argument("password", None)
         password2 = self.get_argument("password2", None)
-        logger.info("Being asked to do a thing for %s %s", username, password)
+        logger.info("Making account for %s", username)
 
         errors = []
 
@@ -178,7 +178,7 @@ class PracticeRegistrationHandler(ContestHandler):
             # Create the user, then create the participation object
             new_user = User(
                 username=username,
-                password="plaintext:"+password,
+                password=hash_password(password),
                 first_name="",
                 last_name="",
                 email="Intermediate")
