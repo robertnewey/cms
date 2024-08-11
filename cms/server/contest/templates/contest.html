@@ -89,7 +89,11 @@ $(document).ready(function () {
         <div class="login_container">
             <div class="login_box hero-unit">
                 <h1>{% trans %}Welcome{% endtrans %}</h1>
+                {% if "ractice" in contest.description %}
+                <p>{% trans %}Please log in, or create an account using the button below.{% endtrans %}</p>
+                {% else %}
                 <p>{% trans %}Please log in{% endtrans %}</p>
+                {% endif %}
                 <form class="form-horizontal" action="{{ contest_url("login") }}" method="POST">
                     {{ xsrf_form_html|safe }}
                     {% set next_page = handler.get_argument("next", none) %}
@@ -118,7 +122,7 @@ $(document).ready(function () {
                     </fieldset>
                 </form>
 {% if allow_self_rego %}
-		<a href="{{ contest_url("selfregister") }}">Or click here to register</a>
+		<a href="{{ contest_url("selfregister") }}">Click here to register</a>
 {% endif %}
             </div>
         </div>
