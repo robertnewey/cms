@@ -92,13 +92,6 @@ from you and add it to that list.
 python3.10 for judging
 ----------------------
 
-For AIO 2024, CMS used python3.10 for judging (to match ORAC) but an older version for everything else. On ubuntu 20.04, python3.10 can be installed using:
+For AIO 2024, CMS used python3.10 (/usr/bin/python3.10) for judging (to match ORAC). However /usr/bin/python3 was still python3.6, to avoid creating issues with the rest of CMS.
 
-```
-sudo apt-get install software-properties-common
-sudo add-apt-repository ppa:deadsnakes/ppa
-sudo apt-get update
-sudo apt-get install python3.10
-```
-
-Then cms/grading/languages/python3_cpython.py was updated in two places, replacing /usr/bin/python3 with /usr/bin/python3.10. To revert, change this back.
+In particular, cms/grading/languages/python3_cpython.py was updated in two places, replacing /usr/bin/python3 with /usr/bin/python3.10. To revert, change this back.
