@@ -117,7 +117,7 @@ class Batch(TaskType):
         {OUTPUT_EVAL_DIFF: "Outputs compared with white diff",
          OUTPUT_EVAL_CHECKER: "Outputs are compared by a comparator"})
 
-    # Added for the AIO to accommodate slow languages like Java, PHP and Python
+    # Added for the AIO to accommodate slow languages like PHP and Python
     _SLOW_LANGUAGE_TIME_LIMIT =  ParameterTypeString("Slow language time limit", "slowtimelimit", "")
 
     ACCEPTED_PARAMETERS = [_COMPILATION, _USE_FILE, _EVALUATION, _SLOW_LANGUAGE_TIME_LIMIT]
@@ -318,7 +318,7 @@ class Batch(TaskType):
 
         # For the AIO, we give Python submissions a laxer timeline
         selected_timelimit = job.time_limit
-        if "Python" in job.language or "PHP" in job.language or "Java" in job.language:
+        if "Python" in job.language or "PHP" in job.language:
             # We used a string parameter because CMS doesn't provide
             # a float one (it does give an int one though)
             try:
